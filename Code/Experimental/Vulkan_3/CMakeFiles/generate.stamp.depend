@@ -1,0 +1,5 @@
+# CMake generation dependency list for this directory.
+D:/Programs/cmake-3.25.1-windows-x86_64/share/cmake-3.25/Modules/FindPackageHandleStandardArgs.cmake
+D:/Programs/cmake-3.25.1-windows-x86_64/share/cmake-3.25/Modules/FindPackageMessage.cmake
+D:/Programs/cmake-3.25.1-windows-x86_64/share/cmake-3.25/Modules/FindVulkan.cmake
+F:/CookieKat/Code/Experimental/Vulkan_3/CMakeLists.txt

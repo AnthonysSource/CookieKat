@@ -1,0 +1,475 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{878DCFE2-DD70-37B5-9F8A-9C23680021C1}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.22000.0</WindowsTargetPlatformVersion>
+    <Platform>x64</Platform>
+    <ProjectName>ResourceCompilerCLI</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:\CookieKat\Code\Tools\ResourceCompilerCLI\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ResourceCompilerCLI.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ResourceCompilerCLI</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:\CookieKat\Code\Tools\ResourceCompilerCLI\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ResourceCompilerCLI.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ResourceCompilerCLI</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:\CookieKat\Code\Tools\ResourceCompilerCLI\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">ResourceCompilerCLI.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">ResourceCompilerCLI</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:\CookieKat\Code\Tools\ResourceCompilerCLI\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">ResourceCompilerCLI.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">ResourceCompilerCLI</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</GenerateManifest>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>F:\CookieKat\Code\Tools\ResourceCompilerCLI;F:\CookieKat\Code\Tools\ResourceCompiler;F:\CookieKat\Code\Runtime\Engine;F:\CookieKat\Code\Runtime\Core;F:\CookieKat\Code\Runtime\Core\Memory\include;F:\CookieKat\Code\Runtime\Core\Containers\include;F:\CookieKat\Code\Runtime\Core\Platform\include;F:\CookieKat\Code\Runtime\Core\Serialization\include;F:\CookieKat\Code\Runtime\Core\FileSystem\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\rapidjson\include;F:\CookieKat\Code\Runtime\Core\Random\include;F:\CookieKat\Code\Runtime\Core\Math\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glm\glm\..;F:\CookieKat\Code\Runtime\Core\Timer\include;F:\CookieKat\Code\Runtime\Core\Profilling\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\optick\src;F:\CookieKat\Code\Runtime\Core\Logging\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glad\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glfw\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\imgui;F:\CookieKat\Code\Runtime\Core\ThirdParty\stb;F:\CookieKat\Code\Runtime\Core\ThirdParty\enkiTS\src;F:\CookieKat\Code\Runtime\Core\ThirdParty\assimp\code\..\include;F:\CookieKat\Code\Runtime\Systems;F:\CookieKat\Code\Runtime\Systems\TaskSystem\include;F:\CookieKat\Code\Runtime\Systems\EngineSystem\include;F:\CookieKat\Code\Runtime\Systems\ECS\include;F:\CookieKat\Code\Runtime\Systems\Input\include;F:\CookieKat\Code\Runtime\Systems\Resources\include;F:\CookieKat\Code\Runtime\Systems\Render\include;F:\CookieKat\Code\Runtime\Engine\Resources\include;F:\CookieKat\Code\Runtime\Engine\Render\include;F:\CookieKat\Code\Runtime\Engine\Entities\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "D:/Programs/VulkanSDK/1.3.236.0/Include"</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <UseFullPaths>false</UseFullPaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;GLFW_INCLUDE_NONE;CKE_GRAPHICS_VULKAN_BACKEND;CKE_BUILDSYSTEM_ASSERTS_ENABLE;GLFW_DLL;ENKITS_TASK_PRIORITIES_NUM=3;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;GLFW_INCLUDE_NONE;CKE_GRAPHICS_VULKAN_BACKEND;CKE_BUILDSYSTEM_ASSERTS_ENABLE;GLFW_DLL;ENKITS_TASK_PRIORITIES_NUM=3;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>F:\CookieKat\Code\Tools\ResourceCompilerCLI;F:\CookieKat\Code\Tools\ResourceCompiler;F:\CookieKat\Code\Runtime\Engine;F:\CookieKat\Code\Runtime\Core;F:\CookieKat\Code\Runtime\Core\Memory\include;F:\CookieKat\Code\Runtime\Core\Containers\include;F:\CookieKat\Code\Runtime\Core\Platform\include;F:\CookieKat\Code\Runtime\Core\Serialization\include;F:\CookieKat\Code\Runtime\Core\FileSystem\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\rapidjson\include;F:\CookieKat\Code\Runtime\Core\Random\include;F:\CookieKat\Code\Runtime\Core\Math\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glm\glm\..;F:\CookieKat\Code\Runtime\Core\Timer\include;F:\CookieKat\Code\Runtime\Core\Profilling\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\optick\src;F:\CookieKat\Code\Runtime\Core\Logging\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glad\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glfw\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\imgui;F:\CookieKat\Code\Runtime\Core\ThirdParty\stb;F:\CookieKat\Code\Runtime\Core\ThirdParty\enkiTS\src;F:\CookieKat\Code\Runtime\Core\ThirdParty\assimp\code\..\include;F:\CookieKat\Code\Runtime\Systems;F:\CookieKat\Code\Runtime\Systems\TaskSystem\include;F:\CookieKat\Code\Runtime\Systems\EngineSystem\include;F:\CookieKat\Code\Runtime\Systems\ECS\include;F:\CookieKat\Code\Runtime\Systems\Input\include;F:\CookieKat\Code\Runtime\Systems\Resources\include;F:\CookieKat\Code\Runtime\Systems\Render\include;F:\CookieKat\Code\Runtime\Engine\Resources\include;F:\CookieKat\Code\Runtime\Engine\Render\include;F:\CookieKat\Code\Runtime\Engine\Entities\include;D:\Programs\VulkanSDK\1.3.236.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>F:\CookieKat\Code\Tools\ResourceCompilerCLI;F:\CookieKat\Code\Tools\ResourceCompiler;F:\CookieKat\Code\Runtime\Engine;F:\CookieKat\Code\Runtime\Core;F:\CookieKat\Code\Runtime\Core\Memory\include;F:\CookieKat\Code\Runtime\Core\Containers\include;F:\CookieKat\Code\Runtime\Core\Platform\include;F:\CookieKat\Code\Runtime\Core\Serialization\include;F:\CookieKat\Code\Runtime\Core\FileSystem\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\rapidjson\include;F:\CookieKat\Code\Runtime\Core\Random\include;F:\CookieKat\Code\Runtime\Core\Math\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glm\glm\..;F:\CookieKat\Code\Runtime\Core\Timer\include;F:\CookieKat\Code\Runtime\Core\Profilling\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\optick\src;F:\CookieKat\Code\Runtime\Core\Logging\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glad\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glfw\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\imgui;F:\CookieKat\Code\Runtime\Core\ThirdParty\stb;F:\CookieKat\Code\Runtime\Core\ThirdParty\enkiTS\src;F:\CookieKat\Code\Runtime\Core\ThirdParty\assimp\code\..\include;F:\CookieKat\Code\Runtime\Systems;F:\CookieKat\Code\Runtime\Systems\TaskSystem\include;F:\CookieKat\Code\Runtime\Systems\EngineSystem\include;F:\CookieKat\Code\Runtime\Systems\ECS\include;F:\CookieKat\Code\Runtime\Systems\Input\include;F:\CookieKat\Code\Runtime\Systems\Resources\include;F:\CookieKat\Code\Runtime\Systems\Render\include;F:\CookieKat\Code\Runtime\Engine\Resources\include;F:\CookieKat\Code\Runtime\Engine\Render\include;F:\CookieKat\Code\Runtime\Engine\Entities\include;D:\Programs\VulkanSDK\1.3.236.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>..\ResourceCompiler\Debug\ResourceCompilerd.lib;..\..\Runtime\Engine\Debug\CookieKat_Engined.lib;..\..\Runtime\Engine\Render\Debug\CookieKat_Runtime_Engine_Renderd.lib;..\..\Runtime\Engine\Entities\Debug\CookieKat_Runtime_Engine_Entitiesd.lib;..\..\Runtime\Engine\Resources\Debug\CookieKat_Runtime_Engine_Resourcesd.lib;..\..\Runtime\Systems\Debug\CookieKat_Systemsd.lib;..\..\Runtime\Systems\ECS\Debug\CookieKat_Runtime_Systems_ECSd.lib;..\..\Runtime\Systems\Resources\Debug\CookieKat_Runtime_Systems_Resourcesd.lib;..\..\Runtime\Systems\TaskSystem\Debug\CookieKat_Runtime_Systems_TaskSystemd.lib;..\..\Runtime\Systems\Input\Debug\CookieKat_Runtime_Systems_Inputd.lib;..\..\Runtime\Systems\Render\Debug\CookieKat_Runtime_Systems_Renderd.lib;..\..\Runtime\Systems\EngineSystem\Debug\CookieKat_Runtime_Systems_EngineSystemd.lib;..\..\Runtime\Core\Debug\CookieKat_Core.lib;..\..\Runtime\Core\Serialization\Debug\CookieKat_Runtime_Core_Serializationd.lib;..\..\Runtime\Core\Memory\Debug\CookieKat_Runtime_Core_Memoryd.lib;..\..\Runtime\Core\ThirdParty\rapidjson\Debug\RapidJSONd.lib;..\..\Runtime\Core\FileSystem\Debug\CookieKat_Runtime_Core_FileSystemd.lib;..\..\Runtime\Core\Random\Debug\CookieKat_Runtime_Core_Randomd.lib;..\..\Runtime\Core\Timer\Debug\CookieKat_Runtime_Core_Timed.lib;..\..\Runtime\Core\Math\Debug\CookieKat_Runtime_Core_Mathd.lib;..\..\Runtime\Core\Profilling\Debug\CookieKat_Runtime_Core_Profillingd.lib;..\..\Runtime\Core\ThirdParty\optick\Debug\OptickCored.lib;..\..\Runtime\Core\Logging\Debug\CookieKat_Runtime_Core_Loggingd.lib;..\..\Runtime\Core\Containers\Debug\CookieKat_Runtime_Core_Containersd.lib;..\..\Runtime\Core\Platform\Debug\CookieKat_Runtime_Core_Platformd.lib;opengl32.lib;..\..\Runtime\Core\ThirdParty\glad\Debug\Glad.lib;..\..\Runtime\Core\ThirdParty\imgui\Debug\imgui.lib;..\..\Runtime\Core\ThirdParty\glfw\src\Debug\glfw3dll.lib;..\..\Runtime\Core\ThirdParty\stb\Debug\Stb.lib;..\..\Runtime\Core\ThirdParty\enkiTS\Debug\enkiTS.lib;..\..\Runtime\Core\ThirdParty\assimp\lib\Debug\assimp-vc143-mtd.lib;..\..\Runtime\Core\ThirdParty\assimp\contrib\zlib\Debug\zlibstaticd.lib;D:\Programs\VulkanSDK\1.3.236.0\Lib\vulkan-1.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>F:/CookieKat/Code/Tools/ResourceCompilerCLI/Debug/ResourceCompilerCLI.lib</ImportLibrary>
+      <ProgramDataBaseFile>F:/CookieKat/Code/Tools/ResourceCompilerCLI/Debug/ResourceCompilerCLI.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>F:\CookieKat\Code\Tools\ResourceCompilerCLI;F:\CookieKat\Code\Tools\ResourceCompiler;F:\CookieKat\Code\Runtime\Engine;F:\CookieKat\Code\Runtime\Core;F:\CookieKat\Code\Runtime\Core\Memory\include;F:\CookieKat\Code\Runtime\Core\Containers\include;F:\CookieKat\Code\Runtime\Core\Platform\include;F:\CookieKat\Code\Runtime\Core\Serialization\include;F:\CookieKat\Code\Runtime\Core\FileSystem\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\rapidjson\include;F:\CookieKat\Code\Runtime\Core\Random\include;F:\CookieKat\Code\Runtime\Core\Math\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glm\glm\..;F:\CookieKat\Code\Runtime\Core\Timer\include;F:\CookieKat\Code\Runtime\Core\Profilling\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\optick\src;F:\CookieKat\Code\Runtime\Core\Logging\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glad\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glfw\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\imgui;F:\CookieKat\Code\Runtime\Core\ThirdParty\stb;F:\CookieKat\Code\Runtime\Core\ThirdParty\enkiTS\src;F:\CookieKat\Code\Runtime\Core\ThirdParty\assimp\code\..\include;F:\CookieKat\Code\Runtime\Systems;F:\CookieKat\Code\Runtime\Systems\TaskSystem\include;F:\CookieKat\Code\Runtime\Systems\EngineSystem\include;F:\CookieKat\Code\Runtime\Systems\ECS\include;F:\CookieKat\Code\Runtime\Systems\Input\include;F:\CookieKat\Code\Runtime\Systems\Resources\include;F:\CookieKat\Code\Runtime\Systems\Render\include;F:\CookieKat\Code\Runtime\Engine\Resources\include;F:\CookieKat\Code\Runtime\Engine\Render\include;F:\CookieKat\Code\Runtime\Engine\Entities\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "D:/Programs/VulkanSDK/1.3.236.0/Include" /Ob3</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <UseFullPaths>false</UseFullPaths>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;GLFW_INCLUDE_NONE;CKE_GRAPHICS_VULKAN_BACKEND;CKE_BUILDSYSTEM_ASSERTS_ENABLE;GLFW_DLL;ENKITS_TASK_PRIORITIES_NUM=3;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;GLFW_INCLUDE_NONE;CKE_GRAPHICS_VULKAN_BACKEND;CKE_BUILDSYSTEM_ASSERTS_ENABLE;GLFW_DLL;ENKITS_TASK_PRIORITIES_NUM=3;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>F:\CookieKat\Code\Tools\ResourceCompilerCLI;F:\CookieKat\Code\Tools\ResourceCompiler;F:\CookieKat\Code\Runtime\Engine;F:\CookieKat\Code\Runtime\Core;F:\CookieKat\Code\Runtime\Core\Memory\include;F:\CookieKat\Code\Runtime\Core\Containers\include;F:\CookieKat\Code\Runtime\Core\Platform\include;F:\CookieKat\Code\Runtime\Core\Serialization\include;F:\CookieKat\Code\Runtime\Core\FileSystem\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\rapidjson\include;F:\CookieKat\Code\Runtime\Core\Random\include;F:\CookieKat\Code\Runtime\Core\Math\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glm\glm\..;F:\CookieKat\Code\Runtime\Core\Timer\include;F:\CookieKat\Code\Runtime\Core\Profilling\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\optick\src;F:\CookieKat\Code\Runtime\Core\Logging\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glad\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glfw\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\imgui;F:\CookieKat\Code\Runtime\Core\ThirdParty\stb;F:\CookieKat\Code\Runtime\Core\ThirdParty\enkiTS\src;F:\CookieKat\Code\Runtime\Core\ThirdParty\assimp\code\..\include;F:\CookieKat\Code\Runtime\Systems;F:\CookieKat\Code\Runtime\Systems\TaskSystem\include;F:\CookieKat\Code\Runtime\Systems\EngineSystem\include;F:\CookieKat\Code\Runtime\Systems\ECS\include;F:\CookieKat\Code\Runtime\Systems\Input\include;F:\CookieKat\Code\Runtime\Systems\Resources\include;F:\CookieKat\Code\Runtime\Systems\Render\include;F:\CookieKat\Code\Runtime\Engine\Resources\include;F:\CookieKat\Code\Runtime\Engine\Render\include;F:\CookieKat\Code\Runtime\Engine\Entities\include;D:\Programs\VulkanSDK\1.3.236.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>F:\CookieKat\Code\Tools\ResourceCompilerCLI;F:\CookieKat\Code\Tools\ResourceCompiler;F:\CookieKat\Code\Runtime\Engine;F:\CookieKat\Code\Runtime\Core;F:\CookieKat\Code\Runtime\Core\Memory\include;F:\CookieKat\Code\Runtime\Core\Containers\include;F:\CookieKat\Code\Runtime\Core\Platform\include;F:\CookieKat\Code\Runtime\Core\Serialization\include;F:\CookieKat\Code\Runtime\Core\FileSystem\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\rapidjson\include;F:\CookieKat\Code\Runtime\Core\Random\include;F:\CookieKat\Code\Runtime\Core\Math\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glm\glm\..;F:\CookieKat\Code\Runtime\Core\Timer\include;F:\CookieKat\Code\Runtime\Core\Profilling\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\optick\src;F:\CookieKat\Code\Runtime\Core\Logging\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glad\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glfw\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\imgui;F:\CookieKat\Code\Runtime\Core\ThirdParty\stb;F:\CookieKat\Code\Runtime\Core\ThirdParty\enkiTS\src;F:\CookieKat\Code\Runtime\Core\ThirdParty\assimp\code\..\include;F:\CookieKat\Code\Runtime\Systems;F:\CookieKat\Code\Runtime\Systems\TaskSystem\include;F:\CookieKat\Code\Runtime\Systems\EngineSystem\include;F:\CookieKat\Code\Runtime\Systems\ECS\include;F:\CookieKat\Code\Runtime\Systems\Input\include;F:\CookieKat\Code\Runtime\Systems\Resources\include;F:\CookieKat\Code\Runtime\Systems\Render\include;F:\CookieKat\Code\Runtime\Engine\Resources\include;F:\CookieKat\Code\Runtime\Engine\Render\include;F:\CookieKat\Code\Runtime\Engine\Entities\include;D:\Programs\VulkanSDK\1.3.236.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>..\ResourceCompiler\Release\ResourceCompiler.lib;..\..\Runtime\Engine\Release\CookieKat_Engine.lib;..\..\Runtime\Engine\Render\Release\CookieKat_Runtime_Engine_Render.lib;..\..\Runtime\Engine\Entities\Release\CookieKat_Runtime_Engine_Entities.lib;..\..\Runtime\Engine\Resources\Release\CookieKat_Runtime_Engine_Resources.lib;..\..\Runtime\Systems\Release\CookieKat_Systems.lib;..\..\Runtime\Systems\ECS\Release\CookieKat_Runtime_Systems_ECS.lib;..\..\Runtime\Systems\Resources\Release\CookieKat_Runtime_Systems_Resources.lib;..\..\Runtime\Systems\TaskSystem\Release\CookieKat_Runtime_Systems_TaskSystem.lib;..\..\Runtime\Systems\Input\Release\CookieKat_Runtime_Systems_Input.lib;..\..\Runtime\Systems\Render\Release\CookieKat_Runtime_Systems_Render.lib;..\..\Runtime\Systems\EngineSystem\Release\CookieKat_Runtime_Systems_EngineSystem.lib;..\..\Runtime\Core\Release\CookieKat_Core.lib;..\..\Runtime\Core\Serialization\Release\CookieKat_Runtime_Core_Serialization.lib;..\..\Runtime\Core\Memory\Release\CookieKat_Runtime_Core_Memory.lib;..\..\Runtime\Core\ThirdParty\rapidjson\Release\RapidJSON.lib;..\..\Runtime\Core\FileSystem\Release\CookieKat_Runtime_Core_FileSystem.lib;..\..\Runtime\Core\Random\Release\CookieKat_Runtime_Core_Random.lib;..\..\Runtime\Core\Timer\Release\CookieKat_Runtime_Core_Time.lib;..\..\Runtime\Core\Math\Release\CookieKat_Runtime_Core_Math.lib;..\..\Runtime\Core\Profilling\Release\CookieKat_Runtime_Core_Profilling.lib;..\..\Runtime\Core\ThirdParty\optick\Release\OptickCore.lib;..\..\Runtime\Core\Logging\Release\CookieKat_Runtime_Core_Logging.lib;..\..\Runtime\Core\Containers\Release\CookieKat_Runtime_Core_Containers.lib;..\..\Runtime\Core\Platform\Release\CookieKat_Runtime_Core_Platform.lib;opengl32.lib;..\..\Runtime\Core\ThirdParty\glad\Release\Glad.lib;..\..\Runtime\Core\ThirdParty\imgui\Release\imgui.lib;..\..\Runtime\Core\ThirdParty\glfw\src\Release\glfw3dll.lib;..\..\Runtime\Core\ThirdParty\stb\Release\Stb.lib;..\..\Runtime\Core\ThirdParty\enkiTS\Release\enkiTS.lib;..\..\Runtime\Core\ThirdParty\assimp\lib\Release\assimp-vc143-mt.lib;..\..\Runtime\Core\ThirdParty\assimp\contrib\zlib\Release\zlibstatic.lib;D:\Programs\VulkanSDK\1.3.236.0\Lib\vulkan-1.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>F:/CookieKat/Code/Tools/ResourceCompilerCLI/Release/ResourceCompilerCLI.lib</ImportLibrary>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <ProgramDataBaseFile>F:/CookieKat/Code/Tools/ResourceCompilerCLI/Release/ResourceCompilerCLI.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>F:\CookieKat\Code\Tools\ResourceCompilerCLI;F:\CookieKat\Code\Tools\ResourceCompiler;F:\CookieKat\Code\Runtime\Engine;F:\CookieKat\Code\Runtime\Core;F:\CookieKat\Code\Runtime\Core\Memory\include;F:\CookieKat\Code\Runtime\Core\Containers\include;F:\CookieKat\Code\Runtime\Core\Platform\include;F:\CookieKat\Code\Runtime\Core\Serialization\include;F:\CookieKat\Code\Runtime\Core\FileSystem\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\rapidjson\include;F:\CookieKat\Code\Runtime\Core\Random\include;F:\CookieKat\Code\Runtime\Core\Math\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glm\glm\..;F:\CookieKat\Code\Runtime\Core\Timer\include;F:\CookieKat\Code\Runtime\Core\Profilling\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\optick\src;F:\CookieKat\Code\Runtime\Core\Logging\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glad\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glfw\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\imgui;F:\CookieKat\Code\Runtime\Core\ThirdParty\stb;F:\CookieKat\Code\Runtime\Core\ThirdParty\enkiTS\src;F:\CookieKat\Code\Runtime\Core\ThirdParty\assimp\code\..\include;F:\CookieKat\Code\Runtime\Systems;F:\CookieKat\Code\Runtime\Systems\TaskSystem\include;F:\CookieKat\Code\Runtime\Systems\EngineSystem\include;F:\CookieKat\Code\Runtime\Systems\ECS\include;F:\CookieKat\Code\Runtime\Systems\Input\include;F:\CookieKat\Code\Runtime\Systems\Resources\include;F:\CookieKat\Code\Runtime\Systems\Render\include;F:\CookieKat\Code\Runtime\Engine\Resources\include;F:\CookieKat\Code\Runtime\Engine\Render\include;F:\CookieKat\Code\Runtime\Engine\Entities\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "D:/Programs/VulkanSDK/1.3.236.0/Include"</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <UseFullPaths>false</UseFullPaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;GLFW_INCLUDE_NONE;CKE_GRAPHICS_VULKAN_BACKEND;CKE_BUILDSYSTEM_ASSERTS_ENABLE;GLFW_DLL;ENKITS_TASK_PRIORITIES_NUM=3;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;GLFW_INCLUDE_NONE;CKE_GRAPHICS_VULKAN_BACKEND;CKE_BUILDSYSTEM_ASSERTS_ENABLE;GLFW_DLL;ENKITS_TASK_PRIORITIES_NUM=3;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>F:\CookieKat\Code\Tools\ResourceCompilerCLI;F:\CookieKat\Code\Tools\ResourceCompiler;F:\CookieKat\Code\Runtime\Engine;F:\CookieKat\Code\Runtime\Core;F:\CookieKat\Code\Runtime\Core\Memory\include;F:\CookieKat\Code\Runtime\Core\Containers\include;F:\CookieKat\Code\Runtime\Core\Platform\include;F:\CookieKat\Code\Runtime\Core\Serialization\include;F:\CookieKat\Code\Runtime\Core\FileSystem\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\rapidjson\include;F:\CookieKat\Code\Runtime\Core\Random\include;F:\CookieKat\Code\Runtime\Core\Math\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glm\glm\..;F:\CookieKat\Code\Runtime\Core\Timer\include;F:\CookieKat\Code\Runtime\Core\Profilling\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\optick\src;F:\CookieKat\Code\Runtime\Core\Logging\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glad\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glfw\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\imgui;F:\CookieKat\Code\Runtime\Core\ThirdParty\stb;F:\CookieKat\Code\Runtime\Core\ThirdParty\enkiTS\src;F:\CookieKat\Code\Runtime\Core\ThirdParty\assimp\code\..\include;F:\CookieKat\Code\Runtime\Systems;F:\CookieKat\Code\Runtime\Systems\TaskSystem\include;F:\CookieKat\Code\Runtime\Systems\EngineSystem\include;F:\CookieKat\Code\Runtime\Systems\ECS\include;F:\CookieKat\Code\Runtime\Systems\Input\include;F:\CookieKat\Code\Runtime\Systems\Resources\include;F:\CookieKat\Code\Runtime\Systems\Render\include;F:\CookieKat\Code\Runtime\Engine\Resources\include;F:\CookieKat\Code\Runtime\Engine\Render\include;F:\CookieKat\Code\Runtime\Engine\Entities\include;D:\Programs\VulkanSDK\1.3.236.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>F:\CookieKat\Code\Tools\ResourceCompilerCLI;F:\CookieKat\Code\Tools\ResourceCompiler;F:\CookieKat\Code\Runtime\Engine;F:\CookieKat\Code\Runtime\Core;F:\CookieKat\Code\Runtime\Core\Memory\include;F:\CookieKat\Code\Runtime\Core\Containers\include;F:\CookieKat\Code\Runtime\Core\Platform\include;F:\CookieKat\Code\Runtime\Core\Serialization\include;F:\CookieKat\Code\Runtime\Core\FileSystem\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\rapidjson\include;F:\CookieKat\Code\Runtime\Core\Random\include;F:\CookieKat\Code\Runtime\Core\Math\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glm\glm\..;F:\CookieKat\Code\Runtime\Core\Timer\include;F:\CookieKat\Code\Runtime\Core\Profilling\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\optick\src;F:\CookieKat\Code\Runtime\Core\Logging\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glad\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glfw\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\imgui;F:\CookieKat\Code\Runtime\Core\ThirdParty\stb;F:\CookieKat\Code\Runtime\Core\ThirdParty\enkiTS\src;F:\CookieKat\Code\Runtime\Core\ThirdParty\assimp\code\..\include;F:\CookieKat\Code\Runtime\Systems;F:\CookieKat\Code\Runtime\Systems\TaskSystem\include;F:\CookieKat\Code\Runtime\Systems\EngineSystem\include;F:\CookieKat\Code\Runtime\Systems\ECS\include;F:\CookieKat\Code\Runtime\Systems\Input\include;F:\CookieKat\Code\Runtime\Systems\Resources\include;F:\CookieKat\Code\Runtime\Systems\Render\include;F:\CookieKat\Code\Runtime\Engine\Resources\include;F:\CookieKat\Code\Runtime\Engine\Render\include;F:\CookieKat\Code\Runtime\Engine\Entities\include;D:\Programs\VulkanSDK\1.3.236.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>..\ResourceCompiler\MinSizeRel\ResourceCompiler.lib;..\..\Runtime\Engine\MinSizeRel\CookieKat_Engine.lib;..\..\Runtime\Engine\Render\MinSizeRel\CookieKat_Runtime_Engine_Render.lib;..\..\Runtime\Engine\Entities\MinSizeRel\CookieKat_Runtime_Engine_Entities.lib;..\..\Runtime\Engine\Resources\MinSizeRel\CookieKat_Runtime_Engine_Resources.lib;..\..\Runtime\Systems\MinSizeRel\CookieKat_Systems.lib;..\..\Runtime\Systems\ECS\MinSizeRel\CookieKat_Runtime_Systems_ECS.lib;..\..\Runtime\Systems\Resources\MinSizeRel\CookieKat_Runtime_Systems_Resources.lib;..\..\Runtime\Systems\TaskSystem\MinSizeRel\CookieKat_Runtime_Systems_TaskSystem.lib;..\..\Runtime\Systems\Input\MinSizeRel\CookieKat_Runtime_Systems_Input.lib;..\..\Runtime\Systems\Render\MinSizeRel\CookieKat_Runtime_Systems_Render.lib;..\..\Runtime\Systems\EngineSystem\MinSizeRel\CookieKat_Runtime_Systems_EngineSystem.lib;..\..\Runtime\Core\MinSizeRel\CookieKat_Core.lib;..\..\Runtime\Core\Serialization\MinSizeRel\CookieKat_Runtime_Core_Serialization.lib;..\..\Runtime\Core\Memory\MinSizeRel\CookieKat_Runtime_Core_Memory.lib;..\..\Runtime\Core\ThirdParty\rapidjson\MinSizeRel\RapidJSON.lib;..\..\Runtime\Core\FileSystem\MinSizeRel\CookieKat_Runtime_Core_FileSystem.lib;..\..\Runtime\Core\Random\MinSizeRel\CookieKat_Runtime_Core_Random.lib;..\..\Runtime\Core\Timer\MinSizeRel\CookieKat_Runtime_Core_Time.lib;..\..\Runtime\Core\Math\MinSizeRel\CookieKat_Runtime_Core_Math.lib;..\..\Runtime\Core\Profilling\MinSizeRel\CookieKat_Runtime_Core_Profilling.lib;..\..\Runtime\Core\ThirdParty\optick\MinSizeRel\OptickCore.lib;..\..\Runtime\Core\Logging\MinSizeRel\CookieKat_Runtime_Core_Logging.lib;..\..\Runtime\Core\Containers\MinSizeRel\CookieKat_Runtime_Core_Containers.lib;..\..\Runtime\Core\Platform\MinSizeRel\CookieKat_Runtime_Core_Platform.lib;opengl32.lib;..\..\Runtime\Core\ThirdParty\glad\MinSizeRel\Glad.lib;..\..\Runtime\Core\ThirdParty\imgui\MinSizeRel\imgui.lib;..\..\Runtime\Core\ThirdParty\glfw\src\MinSizeRel\glfw3dll.lib;..\..\Runtime\Core\ThirdParty\stb\MinSizeRel\Stb.lib;..\..\Runtime\Core\ThirdParty\enkiTS\MinSizeRel\enkiTS.lib;..\..\Runtime\Core\ThirdParty\assimp\lib\MinSizeRel\assimp-vc143-mt.lib;..\..\Runtime\Core\ThirdParty\assimp\contrib\zlib\MinSizeRel\zlibstatic.lib;D:\Programs\VulkanSDK\1.3.236.0\Lib\vulkan-1.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>F:/CookieKat/Code/Tools/ResourceCompilerCLI/MinSizeRel/ResourceCompilerCLI.lib</ImportLibrary>
+      <ProgramDataBaseFile>F:/CookieKat/Code/Tools/ResourceCompilerCLI/MinSizeRel/ResourceCompilerCLI.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>F:\CookieKat\Code\Tools\ResourceCompilerCLI;F:\CookieKat\Code\Tools\ResourceCompiler;F:\CookieKat\Code\Runtime\Engine;F:\CookieKat\Code\Runtime\Core;F:\CookieKat\Code\Runtime\Core\Memory\include;F:\CookieKat\Code\Runtime\Core\Containers\include;F:\CookieKat\Code\Runtime\Core\Platform\include;F:\CookieKat\Code\Runtime\Core\Serialization\include;F:\CookieKat\Code\Runtime\Core\FileSystem\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\rapidjson\include;F:\CookieKat\Code\Runtime\Core\Random\include;F:\CookieKat\Code\Runtime\Core\Math\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glm\glm\..;F:\CookieKat\Code\Runtime\Core\Timer\include;F:\CookieKat\Code\Runtime\Core\Profilling\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\optick\src;F:\CookieKat\Code\Runtime\Core\Logging\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glad\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glfw\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\imgui;F:\CookieKat\Code\Runtime\Core\ThirdParty\stb;F:\CookieKat\Code\Runtime\Core\ThirdParty\enkiTS\src;F:\CookieKat\Code\Runtime\Core\ThirdParty\assimp\code\..\include;F:\CookieKat\Code\Runtime\Systems;F:\CookieKat\Code\Runtime\Systems\TaskSystem\include;F:\CookieKat\Code\Runtime\Systems\EngineSystem\include;F:\CookieKat\Code\Runtime\Systems\ECS\include;F:\CookieKat\Code\Runtime\Systems\Input\include;F:\CookieKat\Code\Runtime\Systems\Resources\include;F:\CookieKat\Code\Runtime\Systems\Render\include;F:\CookieKat\Code\Runtime\Engine\Resources\include;F:\CookieKat\Code\Runtime\Engine\Render\include;F:\CookieKat\Code\Runtime\Engine\Entities\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "D:/Programs/VulkanSDK/1.3.236.0/Include"</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <UseFullPaths>false</UseFullPaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;GLFW_INCLUDE_NONE;CKE_GRAPHICS_VULKAN_BACKEND;CKE_BUILDSYSTEM_ASSERTS_ENABLE;GLFW_DLL;ENKITS_TASK_PRIORITIES_NUM=3;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;GLFW_INCLUDE_NONE;CKE_GRAPHICS_VULKAN_BACKEND;CKE_BUILDSYSTEM_ASSERTS_ENABLE;GLFW_DLL;ENKITS_TASK_PRIORITIES_NUM=3;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>F:\CookieKat\Code\Tools\ResourceCompilerCLI;F:\CookieKat\Code\Tools\ResourceCompiler;F:\CookieKat\Code\Runtime\Engine;F:\CookieKat\Code\Runtime\Core;F:\CookieKat\Code\Runtime\Core\Memory\include;F:\CookieKat\Code\Runtime\Core\Containers\include;F:\CookieKat\Code\Runtime\Core\Platform\include;F:\CookieKat\Code\Runtime\Core\Serialization\include;F:\CookieKat\Code\Runtime\Core\FileSystem\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\rapidjson\include;F:\CookieKat\Code\Runtime\Core\Random\include;F:\CookieKat\Code\Runtime\Core\Math\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glm\glm\..;F:\CookieKat\Code\Runtime\Core\Timer\include;F:\CookieKat\Code\Runtime\Core\Profilling\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\optick\src;F:\CookieKat\Code\Runtime\Core\Logging\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glad\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glfw\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\imgui;F:\CookieKat\Code\Runtime\Core\ThirdParty\stb;F:\CookieKat\Code\Runtime\Core\ThirdParty\enkiTS\src;F:\CookieKat\Code\Runtime\Core\ThirdParty\assimp\code\..\include;F:\CookieKat\Code\Runtime\Systems;F:\CookieKat\Code\Runtime\Systems\TaskSystem\include;F:\CookieKat\Code\Runtime\Systems\EngineSystem\include;F:\CookieKat\Code\Runtime\Systems\ECS\include;F:\CookieKat\Code\Runtime\Systems\Input\include;F:\CookieKat\Code\Runtime\Systems\Resources\include;F:\CookieKat\Code\Runtime\Systems\Render\include;F:\CookieKat\Code\Runtime\Engine\Resources\include;F:\CookieKat\Code\Runtime\Engine\Render\include;F:\CookieKat\Code\Runtime\Engine\Entities\include;D:\Programs\VulkanSDK\1.3.236.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>F:\CookieKat\Code\Tools\ResourceCompilerCLI;F:\CookieKat\Code\Tools\ResourceCompiler;F:\CookieKat\Code\Runtime\Engine;F:\CookieKat\Code\Runtime\Core;F:\CookieKat\Code\Runtime\Core\Memory\include;F:\CookieKat\Code\Runtime\Core\Containers\include;F:\CookieKat\Code\Runtime\Core\Platform\include;F:\CookieKat\Code\Runtime\Core\Serialization\include;F:\CookieKat\Code\Runtime\Core\FileSystem\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\rapidjson\include;F:\CookieKat\Code\Runtime\Core\Random\include;F:\CookieKat\Code\Runtime\Core\Math\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glm\glm\..;F:\CookieKat\Code\Runtime\Core\Timer\include;F:\CookieKat\Code\Runtime\Core\Profilling\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\optick\src;F:\CookieKat\Code\Runtime\Core\Logging\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glad\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\glfw\include;F:\CookieKat\Code\Runtime\Core\ThirdParty\imgui;F:\CookieKat\Code\Runtime\Core\ThirdParty\stb;F:\CookieKat\Code\Runtime\Core\ThirdParty\enkiTS\src;F:\CookieKat\Code\Runtime\Core\ThirdParty\assimp\code\..\include;F:\CookieKat\Code\Runtime\Systems;F:\CookieKat\Code\Runtime\Systems\TaskSystem\include;F:\CookieKat\Code\Runtime\Systems\EngineSystem\include;F:\CookieKat\Code\Runtime\Systems\ECS\include;F:\CookieKat\Code\Runtime\Systems\Input\include;F:\CookieKat\Code\Runtime\Systems\Resources\include;F:\CookieKat\Code\Runtime\Systems\Render\include;F:\CookieKat\Code\Runtime\Engine\Resources\include;F:\CookieKat\Code\Runtime\Engine\Render\include;F:\CookieKat\Code\Runtime\Engine\Entities\include;D:\Programs\VulkanSDK\1.3.236.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>..\ResourceCompiler\RelWithDebInfo\ResourceCompiler.lib;..\..\Runtime\Engine\RelWithDebInfo\CookieKat_Engine.lib;..\..\Runtime\Engine\Render\RelWithDebInfo\CookieKat_Runtime_Engine_Render.lib;..\..\Runtime\Engine\Entities\RelWithDebInfo\CookieKat_Runtime_Engine_Entities.lib;..\..\Runtime\Engine\Resources\RelWithDebInfo\CookieKat_Runtime_Engine_Resources.lib;..\..\Runtime\Systems\RelWithDebInfo\CookieKat_Systems.lib;..\..\Runtime\Systems\ECS\RelWithDebInfo\CookieKat_Runtime_Systems_ECS.lib;..\..\Runtime\Systems\Resources\RelWithDebInfo\CookieKat_Runtime_Systems_Resources.lib;..\..\Runtime\Systems\TaskSystem\RelWithDebInfo\CookieKat_Runtime_Systems_TaskSystem.lib;..\..\Runtime\Systems\Input\RelWithDebInfo\CookieKat_Runtime_Systems_Input.lib;..\..\Runtime\Systems\Render\RelWithDebInfo\CookieKat_Runtime_Systems_Render.lib;..\..\Runtime\Systems\EngineSystem\RelWithDebInfo\CookieKat_Runtime_Systems_EngineSystem.lib;..\..\Runtime\Core\RelWithDebInfo\CookieKat_Core.lib;..\..\Runtime\Core\Serialization\RelWithDebInfo\CookieKat_Runtime_Core_Serialization.lib;..\..\Runtime\Core\Memory\RelWithDebInfo\CookieKat_Runtime_Core_Memory.lib;..\..\Runtime\Core\ThirdParty\rapidjson\RelWithDebInfo\RapidJSON.lib;..\..\Runtime\Core\FileSystem\RelWithDebInfo\CookieKat_Runtime_Core_FileSystem.lib;..\..\Runtime\Core\Random\RelWithDebInfo\CookieKat_Runtime_Core_Random.lib;..\..\Runtime\Core\Timer\RelWithDebInfo\CookieKat_Runtime_Core_Time.lib;..\..\Runtime\Core\Math\RelWithDebInfo\CookieKat_Runtime_Core_Math.lib;..\..\Runtime\Core\Profilling\RelWithDebInfo\CookieKat_Runtime_Core_Profilling.lib;..\..\Runtime\Core\ThirdParty\optick\RelWithDebInfo\OptickCore.lib;..\..\Runtime\Core\Logging\RelWithDebInfo\CookieKat_Runtime_Core_Logging.lib;..\..\Runtime\Core\Containers\RelWithDebInfo\CookieKat_Runtime_Core_Containers.lib;..\..\Runtime\Core\Platform\RelWithDebInfo\CookieKat_Runtime_Core_Platform.lib;opengl32.lib;..\..\Runtime\Core\ThirdParty\glad\RelWithDebInfo\Glad.lib;..\..\Runtime\Core\ThirdParty\imgui\RelWithDebInfo\imgui.lib;..\..\Runtime\Core\ThirdParty\glfw\src\RelWithDebInfo\glfw3dll.lib;..\..\Runtime\Core\ThirdParty\stb\RelWithDebInfo\Stb.lib;..\..\Runtime\Core\ThirdParty\enkiTS\RelWithDebInfo\enkiTS.lib;..\..\Runtime\Core\ThirdParty\assimp\lib\RelWithDebInfo\assimp-vc143-mt.lib;..\..\Runtime\Core\ThirdParty\assimp\contrib\zlib\RelWithDebInfo\zlibstatic.lib;D:\Programs\VulkanSDK\1.3.236.0\Lib\vulkan-1.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>F:/CookieKat/Code/Tools/ResourceCompilerCLI/RelWithDebInfo/ResourceCompilerCLI.lib</ImportLibrary>
+      <ProgramDataBaseFile>F:/CookieKat/Code/Tools/ResourceCompilerCLI/RelWithDebInfo/ResourceCompilerCLI.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="F:\CookieKat\Code\Tools\ResourceCompilerCLI\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule F:/CookieKat/Code/Tools/ResourceCompilerCLI/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+D:\Programs\cmake-3.25.1-windows-x86_64\bin\cmake.exe -SF:/CookieKat -BF:/CookieKat --check-stamp-file F:/CookieKat/Code/Tools/ResourceCompilerCLI/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:\CookieKat\Code\Tools\ResourceCompilerCLI\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule F:/CookieKat/Code/Tools/ResourceCompilerCLI/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+D:\Programs\cmake-3.25.1-windows-x86_64\bin\cmake.exe -SF:/CookieKat -BF:/CookieKat --check-stamp-file F:/CookieKat/Code/Tools/ResourceCompilerCLI/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:\CookieKat\Code\Tools\ResourceCompilerCLI\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule F:/CookieKat/Code/Tools/ResourceCompilerCLI/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+D:\Programs\cmake-3.25.1-windows-x86_64\bin\cmake.exe -SF:/CookieKat -BF:/CookieKat --check-stamp-file F:/CookieKat/Code/Tools/ResourceCompilerCLI/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:\CookieKat\Code\Tools\ResourceCompilerCLI\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule F:/CookieKat/Code/Tools/ResourceCompilerCLI/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+D:\Programs\cmake-3.25.1-windows-x86_64\bin\cmake.exe -SF:/CookieKat -BF:/CookieKat --check-stamp-file F:/CookieKat/Code/Tools/ResourceCompilerCLI/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:\CookieKat\Code\Tools\ResourceCompilerCLI\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="F:\CookieKat\Code\Tools\ResourceCompilerCLI\EntryPointCLI.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="F:\CookieKat\ZERO_CHECK.vcxproj">
+      <Project>{24816DE7-F995-31F0-927D-BED017DC9B58}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Runtime\Core\CookieKat_Core.vcxproj">
+      <Project>{15B3D3C0-AE10-375F-8130-01C5B377A6EE}</Project>
+      <Name>CookieKat_Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Runtime\Engine\CookieKat_Engine.vcxproj">
+      <Project>{969B6D0F-5323-393C-A6B6-0468DEB514C9}</Project>
+      <Name>CookieKat_Engine</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Runtime\Core\Containers\CookieKat_Runtime_Core_Containers.vcxproj">
+      <Project>{49551921-0400-3659-90A8-97ADC9A49FE6}</Project>
+      <Name>CookieKat_Runtime_Core_Containers</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Runtime\Core\FileSystem\CookieKat_Runtime_Core_FileSystem.vcxproj">
+      <Project>{8BF3E7A5-21B5-3A17-A39E-3ECB1C167354}</Project>
+      <Name>CookieKat_Runtime_Core_FileSystem</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Runtime\Core\Logging\CookieKat_Runtime_Core_Logging.vcxproj">
+      <Project>{9DEA8A1B-AA25-35DF-8D5E-C9639D7E2D64}</Project>
+      <Name>CookieKat_Runtime_Core_Logging</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Runtime\Core\Math\CookieKat_Runtime_Core_Math.vcxproj">
+      <Project>{8C2CA890-2A98-31DE-B536-D0399C7602CC}</Project>
+      <Name>CookieKat_Runtime_Core_Math</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Runtime\Core\Memory\CookieKat_Runtime_Core_Memory.vcxproj">
+      <Project>{0B69C893-2F0A-3FC7-A192-732D1117EC9A}</Project>
+      <Name>CookieKat_Runtime_Core_Memory</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Runtime\Core\Platform\CookieKat_Runtime_Core_Platform.vcxproj">
+      <Project>{85B18826-960A-33E2-97DE-99E8F43F0653}</Project>
+      <Name>CookieKat_Runtime_Core_Platform</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Runtime\Core\Profilling\CookieKat_Runtime_Core_Profilling.vcxproj">
+      <Project>{17FB6438-9848-3A7D-A1A9-EF061B388A29}</Project>
+      <Name>CookieKat_Runtime_Core_Profilling</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Runtime\Core\Random\CookieKat_Runtime_Core_Random.vcxproj">
+      <Project>{FE593A77-513B-3097-95E6-91983125C898}</Project>
+      <Name>CookieKat_Runtime_Core_Random</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Runtime\Core\Serialization\CookieKat_Runtime_Core_Serialization.vcxproj">
+      <Project>{5BB5BB56-F16B-356A-BE4E-C0E8E9C06812}</Project>
+      <Name>CookieKat_Runtime_Core_Serialization</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Runtime\Core\Timer\CookieKat_Runtime_Core_Time.vcxproj">
+      <Project>{250AE6E1-0F03-375F-9CAF-D5FD6B54590B}</Project>
+      <Name>CookieKat_Runtime_Core_Time</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Runtime\Engine\Entities\CookieKat_Runtime_Engine_Entities.vcxproj">
+      <Project>{5065E61C-A2EE-33D1-B346-CF52032DC120}</Project>
+      <Name>CookieKat_Runtime_Engine_Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Runtime\Engine\Render\CookieKat_Runtime_Engine_Render.vcxproj">
+      <Project>{5D36FF7D-A4EC-33A0-898D-52F91625F98C}</Project>
+      <Name>CookieKat_Runtime_Engine_Render</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Runtime\Engine\Resources\CookieKat_Runtime_Engine_Resources.vcxproj">
+      <Project>{42A89121-C91D-3EEF-9A36-DCB44A5D998A}</Project>
+      <Name>CookieKat_Runtime_Engine_Resources</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Runtime\Systems\ECS\CookieKat_Runtime_Systems_ECS.vcxproj">
+      <Project>{EA7D981F-82B9-3C14-97FD-A3DBAB4D521F}</Project>
+      <Name>CookieKat_Runtime_Systems_ECS</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Runtime\Systems\EngineSystem\CookieKat_Runtime_Systems_EngineSystem.vcxproj">
+      <Project>{BAE9CBE7-246E-3593-B73B-0E425BD475BD}</Project>
+      <Name>CookieKat_Runtime_Systems_EngineSystem</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Runtime\Systems\Input\CookieKat_Runtime_Systems_Input.vcxproj">
+      <Project>{DB5557D4-A711-3AD8-B4C4-9659DFA85164}</Project>
+      <Name>CookieKat_Runtime_Systems_Input</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Runtime\Systems\Render\CookieKat_Runtime_Systems_Render.vcxproj">
+      <Project>{D0596ED5-F315-3058-A9D4-4C31CEF718B7}</Project>
+      <Name>CookieKat_Runtime_Systems_Render</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Runtime\Systems\Resources\CookieKat_Runtime_Systems_Resources.vcxproj">
+      <Project>{DC1C5A06-740B-3B56-9303-1DC84F46BF8A}</Project>
+      <Name>CookieKat_Runtime_Systems_Resources</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Runtime\Systems\TaskSystem\CookieKat_Runtime_Systems_TaskSystem.vcxproj">
+      <Project>{24A99016-CDB0-3614-A5EA-E333A8EB63EB}</Project>
+      <Name>CookieKat_Runtime_Systems_TaskSystem</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Runtime\Systems\CookieKat_Systems.vcxproj">
+      <Project>{4077D936-C5A2-351B-A9FD-B53BD3AC00DA}</Project>
+      <Name>CookieKat_Systems</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Runtime\Core\ThirdParty\glad\Glad.vcxproj">
+      <Project>{38EFC663-A436-3C0E-BCF0-17129937DA50}</Project>
+      <Name>Glad</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Runtime\Core\ThirdParty\optick\OptickCore.vcxproj">
+      <Project>{1773E2C6-D8D0-31E8-8795-963DA6449D43}</Project>
+      <Name>OptickCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Runtime\Core\ThirdParty\rapidjson\RapidJSON.vcxproj">
+      <Project>{E1028982-9BAE-35A1-99D6-EF118B054D4F}</Project>
+      <Name>RapidJSON</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Tools\ResourceCompiler\ResourceCompiler.vcxproj">
+      <Project>{8CA034D4-B256-3807-83EF-49D218905C34}</Project>
+      <Name>ResourceCompiler</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Runtime\Core\ThirdParty\stb\Stb.vcxproj">
+      <Project>{A8FE1F23-1651-3209-9BBE-991175EDC368}</Project>
+      <Name>Stb</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Runtime\Core\ThirdParty\assimp\code\assimp.vcxproj">
+      <Project>{5EDAC629-C490-3DBE-8755-9A0738B68A06}</Project>
+      <Name>assimp</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Runtime\Core\ThirdParty\enkiTS\enkiTS.vcxproj">
+      <Project>{B4792745-FCA0-3747-B396-23F2A3B1D42B}</Project>
+      <Name>enkiTS</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Runtime\Core\ThirdParty\glfw\src\glfw.vcxproj">
+      <Project>{6C4C9033-1608-30A3-9FC7-034E7ECA7007}</Project>
+      <Name>glfw</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Runtime\Core\ThirdParty\imgui\imgui.vcxproj">
+      <Project>{FC1A330B-5751-3E35-A7CD-B596F4D3ECDD}</Project>
+      <Name>imgui</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\CookieKat\Code\Runtime\Core\ThirdParty\assimp\contrib\zlib\zlibstatic.vcxproj">
+      <Project>{F64FB57A-FAD5-35B0-8109-9C6605387F1E}</Project>
+      <Name>zlibstatic</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
