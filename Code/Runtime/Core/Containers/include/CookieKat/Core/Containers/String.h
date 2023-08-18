@@ -5,15 +5,9 @@
 
 #include <string>
 
-#include "Containers.h"
-
-// Forward Declarations
 namespace CKE {
-	template <u16 ByteSize>
-	class FixedString;
-}
+	//-----------------------------------------------------------------------------
 
-namespace CKE {
 	using String = std::string;
 
 	//-----------------------------------------------------------------------------
@@ -22,13 +16,15 @@ namespace CKE {
 	{
 	public:
 		DebugString() = default;
-		DebugString(const char* pStr) : m_pStr{ pStr } {}
+		DebugString(const char* pStr) : m_pStr{pStr} {}
 
 		inline char const* GetStr() { return m_pStr; }
 
 	private:
-		char const* m_pStr{ nullptr };
+		char const* m_pStr{nullptr};
 	};
+
+	//-----------------------------------------------------------------------------
 
 	// Compile time u64 ID generated from a string
 	class StringID
@@ -42,8 +38,10 @@ namespace CKE {
 		consteval u64 Hash(const char* str);
 
 	private:
-		u64 m_HashID{ 0 };
+		u64 m_HashID{0};
 	};
+
+	//-----------------------------------------------------------------------------
 
 	// String with a compile time stack size and an extra dynamically allocated heap buffer
 	template <u64 ByteSize>
@@ -53,20 +51,11 @@ namespace CKE {
 		// TODO
 	private:
 		char  m_StrBuffer[ByteSize]{};
-		char* m_pDynamicExtraBuffer{ nullptr };
-		u32   m_DynamicExtraBufferSize{ 0 };
+		char* m_pDynamicExtraBuffer{nullptr};
+		u32   m_DynamicExtraBufferSize{0};
 	};
 
 	//-----------------------------------------------------------------------------
-
-	// 32 Byte stack string that can hold 30 characters
-	using FixedString32 = FixedString<32>;
-
-	// 64 Byte stack string that can hold 62 characters
-	using FixedString64 = FixedString<64>;
-
-	// 128 Byte stack string that can hold 126 characters
-	using FixedString128 = FixedString<128>;
 
 	// A "ByteSize" bytes stack string that can hold "ByteSize-2" characters
 	template <u16 ByteSize>
@@ -88,12 +77,25 @@ namespace CKE {
 		u16  m_Size{};
 		char m_StrBuffer[ByteSize - 2]{};
 	};
+
+	// 32 Byte stack string that can hold 30 characters
+	using FixedString32 = FixedString<32>;
+
+	// 64 Byte stack string that can hold 62 characters
+	using FixedString64 = FixedString<64>;
+
+	// 128 Byte stack string that can hold 126 characters
+	using FixedString128 = FixedString<128>;
+
+	using FixedString256 = FixedString<256>;
 }
 
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
-namespace CKE{
-	//-----------------------------------------------------------------------------
-
+namespace CKE {
 	consteval u64 StringID::Hash(const char* str) {
 		u64 pos = 0;
 		u64 hash{14695981039346656037u};

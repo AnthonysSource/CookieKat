@@ -75,7 +75,7 @@ void Game::World_StressTest(CKE::EntityDatabase& db, CKE::EntitySystem* system) 
 	EntityID light = db.CreateEntity();
 	db.AddComponent<PointLightComponent>(light, PointLightComponent{Vec3{5, 5, 5}, Vec3{125.0f}});
 
-	constexpr int_least32_t CUBE_SIZE = 30;
+	constexpr i32 CUBE_SIZE = 30;
 	constexpr f32           CUBE_SEPARATION = 100.0f;
 
 	MeshComponent meshComp{};

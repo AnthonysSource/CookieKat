@@ -21,7 +21,9 @@ namespace CKE::ECS
 	class ECS_SimpleTest
 	{
 	public:
-		ECS_SimpleTest() = default;
+		ECS_SimpleTest() {
+			m_Admin.Initialize(100);
+		};
 
 		void CreateDestroyComponentsTest()
 		{
@@ -98,6 +100,6 @@ namespace CKE::ECS
 		}
 
 	private:
-		EntityDatabase m_Admin{100};
+		EntityDatabase m_Admin{};
 	};
 }

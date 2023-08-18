@@ -58,7 +58,6 @@ namespace CKEMath {
 	};
 }
 
-
 namespace CKEMath {
 	template <typename T>
 	T Vec3<T>::Magnitude() const {

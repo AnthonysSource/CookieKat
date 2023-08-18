@@ -6,12 +6,9 @@ namespace CKE
 {
 	class InputSystem;
 
-	// Generic data structure that contains the platform
-	// specific message with input data
-	//
-	// This will be decoded inside the platform specific input device
-	// implementation
-	// This structure allows for a more generic input system
+	// Generic data structure that contains the platform specific message with input data.
+	// This will be decoded inside the platform specific input device implementation.
+	// This structure allows for a more generic input system.
 	struct PlatformInputMessage
 	{
 		i64 m_Data0;
@@ -30,6 +27,6 @@ namespace CKE
 
 	protected:
 		virtual void ProcessPlatformMessage(PlatformInputMessage const& msg) {}
-		virtual void EndOfFrameUpdate() {};
+		virtual void EndOfFrameUpdate() {}
 	};
 }

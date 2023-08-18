@@ -4,17 +4,12 @@
 #include "CookieKat/Systems/Input/InputDevice.h"
 #include <CookieKat/Systems/Input/KeyCodes.h>
 
-namespace CKE
-{
-	class InputSystem;
-
-	class Keyboard : public InputDevice
+namespace CKE {
+	class KeyboardDevice : public InputDevice
 	{
-		friend InputSystem;
-
 	public:
 		bool GetKeyPressed(KeyCode keyCode) const;
-		bool GetKeyHeld(KeyCode  keyCode) const;
+		bool GetKeyHeld(KeyCode keyCode) const;
 		bool GetKeyReleased(KeyCode keyCode) const;
 
 	protected:
@@ -22,7 +17,9 @@ namespace CKE
 		void EndOfFrameUpdate() override;
 
 	private:
-		static constexpr i32 NUM_KEYS = 350;
+		friend class InputSystem;
+
+		static constexpr i32  NUM_KEYS = 350;
 		Array<bool, NUM_KEYS> m_Pressed;
 		Array<bool, NUM_KEYS> m_Held;
 		Array<bool, NUM_KEYS> m_Released;

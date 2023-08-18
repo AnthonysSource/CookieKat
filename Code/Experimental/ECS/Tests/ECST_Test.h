@@ -56,6 +56,7 @@ namespace CKE::ObjectModelTests {
 		//-----------------------------------------------------------------------------
 
 		inline void Setup(TestParameters const testParams) {
+			m_Admin.Initialize(1'100'000);
 			m_Admin.RegisterComponent<PositionComponent>();
 			m_Admin.RegisterComponent<AccelerationComponent>();
 			m_Admin.RegisterComponent<VelocityComponent>();
@@ -91,6 +92,6 @@ namespace CKE::ObjectModelTests {
 		}
 
 	private:
-		EntityDatabase m_Admin{1'100'000};
+		EntityDatabase m_Admin{};
 	};
 }

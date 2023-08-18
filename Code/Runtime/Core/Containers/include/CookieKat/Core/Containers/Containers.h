@@ -9,6 +9,8 @@
 #include <unordered_map>
 #include <functional>
 
+#include "CookieKat/Core/Platform/PrimitiveTypes.h"
+
 namespace CKE {
 	template <typename T>
 	using Func = std::function<T>;
@@ -39,9 +41,8 @@ namespace CKE {
 }
 
 namespace CKE {
-	class MapUtils
+	struct MapUtils
 	{
-	public:
 		template <typename K, typename V>
 		inline static Vector<K> VectorFromMapKeys(Map<K, V> const& map) {
 			Vector<K> ids{};
@@ -50,6 +51,15 @@ namespace CKE {
 				ids.push_back(pair.first);
 			}
 			return ids;
+		}
+	};
+
+	struct ArrayUtils
+	{
+		template <typename T>
+		inline static void RemoveElementAtIndexAndPack(Vector<T>& vec, u64 elementIndex) {
+			vec[elementIndex] = vec.back();
+			vec.pop_back();
 		}
 	};
 }

@@ -20,7 +20,7 @@ namespace CKE {
 			CKE_PROFILE_EVENT();
 
 			InputStateComponent* inputComp = ctx.GetEntityDatabase()->GetSingletonComponent<InputStateComponent>();
-			Keyboard const*      keyboard = inputComp->m_pInputContext.GetKeyboard();
+			KeyboardDevice const*      keyboard = inputComp->m_pInputContext.GetKeyboard();
 			Mouse const*         mouse = inputComp->m_pInputContext.GetMouse();
 
 			Vec3 movDir{0.0f};

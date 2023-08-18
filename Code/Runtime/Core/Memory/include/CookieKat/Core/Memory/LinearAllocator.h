@@ -31,7 +31,7 @@ namespace CKE {
 
 		//-----------------------------------------------------------------------------
 
-		void FreeAll();
+		void Reset();
 
 	private:
 		u8* m_pBuffer;       // Ptr to the memory block managed by the allocator
@@ -60,7 +60,7 @@ namespace CKE {
 		return pReturnMemory;
 	}
 
-	inline void LinearAllocator::FreeAll() {
+	inline void LinearAllocator::Reset() {
 		m_OffsetInBytes = 0;
 	}
 }

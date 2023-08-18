@@ -43,6 +43,7 @@ namespace CKE::ObjectModelTests {
 		//-----------------------------------------------------------------------------
 
 		inline void Setup(TestParameters const testParameters) {
+			m_Admin.Initialize(1'100'000);
 			m_PositionID = m_Admin.RegisterComponent<PositionComponent>();
 			m_AccelerationID = m_Admin.RegisterComponent<AccelerationComponent>();
 			m_VelocityID = m_Admin.RegisterComponent<VelocityComponent>();
@@ -83,7 +84,7 @@ namespace CKE::ObjectModelTests {
 		}
 
 	private:
-		EntityDatabase m_Admin{1'100'000};
+		EntityDatabase m_Admin{};
 		ComponentTypeID    m_PositionID;
 		ComponentTypeID    m_VelocityID;
 		ComponentTypeID    m_AccelerationID;

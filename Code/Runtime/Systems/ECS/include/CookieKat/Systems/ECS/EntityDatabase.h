@@ -31,9 +31,6 @@ namespace CKE {
 		// Create an uninitialized entity database
 		EntityDatabase() = default;
 
-		// Constructs the database and implicitly calls Initialize(...)
-		explicit EntityDatabase(u64 maxEntities);
-
 		//-----------------------------------------------------------------------------
 		// Lifetime
 		//-----------------------------------------------------------------------------
@@ -324,7 +321,7 @@ namespace CKE {
 
 		// Create an archetype for the given component set
 		void        CreateArchetype(Vector<ComponentTypeID> const& componentSet);
-		//void        DeleteArchetype(Vector<ComponentTypeID> const& componentSet);
+		void        DeleteArchetype(Vector<ComponentTypeID> const& componentSet);
 		inline bool ArchetypeExists(Vector<ComponentTypeID> const& componentSet);
 
 	private:
@@ -335,7 +332,8 @@ namespace CKE {
 		Vector<EntityID>        m_Entities;       // All the active entities in the world
 		Vector<ComponentTypeID> m_ComponentTypes; // All of the component types
 
-		Vector<Archetype> m_Archetypes; // All existing archetypes
+		TPoolAllocator<Archetype> m_ArchetypesPool{250'000};
+		Vector<Archetype*>        m_Archetypes; // All existing archetypes
 
 		// Data Relationships
 		//-----------------------------------------------------------------------------

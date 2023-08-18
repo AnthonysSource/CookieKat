@@ -3,7 +3,7 @@
 #include <iostream>
 
 namespace CKE {
-	void KeyboardInputVisualizer::Update(Keyboard const* keyboard, KeyCode const key) {
+	void KeyboardInputVisualizer::Update(KeyboardDevice const* keyboard, KeyCode const key) {
 		if (keyboard->GetKeyPressed(key)) {
 			std::cout << "P";
 		}

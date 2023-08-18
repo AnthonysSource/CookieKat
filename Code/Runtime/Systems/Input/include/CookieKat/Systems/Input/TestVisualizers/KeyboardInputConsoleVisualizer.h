@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CookieKat/Systems/Input/Devices/Keyboard.h"
+#include "CookieKat/Systems/Input/Devices/KeyboardDevice.h"
 
 namespace CKE
 {
@@ -12,6 +12,6 @@ namespace CKE
 	class KeyboardInputVisualizer
 	{
 	public:
-		static void Update(Keyboard const* keyboard, KeyCode key);
+		static void Update(KeyboardDevice const* keyboard, KeyCode key);
 	};
 }

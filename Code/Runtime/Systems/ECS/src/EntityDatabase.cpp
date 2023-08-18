@@ -5,10 +5,6 @@
 #include <ranges>
 
 namespace CKE {
-	EntityDatabase::EntityDatabase(u64 maxEntities) {
-		Initialize(maxEntities);
-	}
-
 	void EntityDatabase::Initialize(u64 maxEntities) {
 		m_MaxNumEntities = maxEntities;
 		m_Entities.reserve(maxEntities);
@@ -58,35 +54,57 @@ namespace CKE {
 		ComponentSetID componentSetID = CalculateComponentSetID(componentSet);
 
 		// Create the archetype and initialize some basic data
-		Archetype& archetype = m_Archetypes.emplace_back(Archetype{ m_LastArchetypeID, componentSet, m_MaxNumEntities });
+		Archetype* pArchetype = m_ArchetypesPool.New(Archetype{m_LastArchetypeID, componentSet, m_MaxNumEntities});
 
 		// Set data relationships
-		m_ComponentSetToArchetype.insert({componentSetID, &archetype});
-		m_IDToArchetype.insert({m_LastArchetypeID, &archetype});
+		m_ComponentSetToArchetype.insert({componentSetID, pArchetype});
+		m_IDToArchetype.insert({m_LastArchetypeID, pArchetype});
 
 		// Initialize the archetype component table
 		int componentColumn = 0;
-		for (ComponentTypeID componentID : componentSet) {
-			CKE_ASSERT(m_ComponentTypeData.contains(componentID));
-			ComponentTypeData const& typeData = m_ComponentTypeData.at(componentID);
+		for (ComponentTypeID componentTypeID : componentSet) {
+			CKE_ASSERT(m_ComponentTypeData.contains(componentTypeID));
+			ComponentTypeData const& typeData = m_ComponentTypeData.at(componentTypeID);
 
-			if (typeData.m_SizeInBytes == 0) { continue; } // If a component has size 0 don't create an array for it
+			// If a component has size 0 don't create an array for it and we don't
+			// increment the component column.
+			if (typeData.m_SizeInBytes == 0) { continue; }
 
 			// Create component array
-			archetype.m_ArchTable.push_back(ComponentArray{componentID, m_MaxNumEntities, typeData.m_SizeInBytes, typeData.m_Alignment});
+			pArchetype->m_ArchTable.push_back(ComponentArray{
+				componentTypeID, m_MaxNumEntities, typeData.m_SizeInBytes, typeData.m_Alignment
+			});
 
 			// If we find the component doesn't have a relationship
 			// with any archetype then we create it
-			if (!m_ComponentToArchetypes.contains(componentID)) {
-				m_ComponentToArchetypes.insert({componentID, Map<ArchetypeID, ArchetypeComponentColumn>()});
+			if (!m_ComponentToArchetypes.contains(componentTypeID)) {
+				m_ComponentToArchetypes.insert({componentTypeID, Map<ArchetypeID, ArchetypeComponentColumn>()});
 			}
 
 			// Update component to archetypes relationship
 			// The component column is given by its position in the component set array
-			m_ComponentToArchetypes.at(componentID).insert({m_LastArchetypeID, componentColumn});
+			m_ComponentToArchetypes.at(componentTypeID).insert({m_LastArchetypeID, componentColumn});
 
 			componentColumn++;
 		}
+	}
+
+	void EntityDatabase::DeleteArchetype(Vector<ComponentTypeID> const& componentSet) {
+		//ComponentSetID setID = CalculateComponentSetID(componentSet);
+
+		//CKE_ASSERT(m_ComponentSetToArchetype.contains(setID));
+		//Archetype* pArchetype = m_ComponentSetToArchetype.at(setID);
+
+		//m_ComponentSetToArchetype.erase(setID);
+		//m_IDToArchetype.erase(pArchetype->m_ID);
+
+		//for (ComponentTypeID componentTypeID : pArchetype->m_ComponentSet) {
+		//	if(m_ComponentToArchetypes.contains(componentTypeID)) {
+		//		m_ComponentToArchetypes.at(componentTypeID)
+		//	}
+		//}
+
+		//m_ArchetypesPool.Delete(pArchetype);
 	}
 
 	bool EntityDatabase::HasComponent(EntityID entity, ComponentTypeID componentID) {
@@ -213,7 +231,7 @@ namespace CKE {
 
 	void EntityDatabase::PrintAdminState() {
 		u32 numArchetypesInUse = 0;
-		for (Archetype& arch : m_Archetypes) { if (arch.m_NumEntities != 0) { numArchetypesInUse++; } }
+		for (Archetype const* pArchetype : m_Archetypes) { if (pArchetype->m_NumEntities != 0) { numArchetypesInUse++; } }
 
 		std::cout << "-------------------------------------------------------------------" << std::endl;
 		std::cout << "	Entity Admin State" << std::endl;
@@ -231,11 +249,11 @@ namespace CKE {
 
 		std::cout << "-------------------------------------------------------------------" << std::endl;
 
-		for (Archetype& arch : m_Archetypes) {
-			if (arch.m_NumEntities == 0) { continue; }
+		for (Archetype const* pArchetype : m_Archetypes) {
+			if (pArchetype->m_NumEntities == 0) { continue; }
 
-			std::cout << "Archetype " << arch.m_ID << " - " << arch.m_NumEntities << " Entities" << std::endl;
-			Vector<ComponentTypeID>& sortedSet = arch.m_ComponentSet;
+			std::cout << "Archetype " << pArchetype->m_ID << " - " << pArchetype->m_NumEntities << " Entities" << std::endl;
+			Vector<ComponentTypeID> sortedSet = pArchetype->m_ComponentSet;
 			std::sort(sortedSet.begin(), sortedSet.end());
 			for (auto compID : sortedSet) {
 				std::cout << "    " << m_ComponentTypeData.at(compID).m_Name << std::endl;
@@ -278,7 +296,7 @@ namespace CKE {
 
 	void EntityDatabaseDebugger::PrintGeneralState() const {
 		u32 numArchetypesInUse = 0;
-		for (Archetype& arch : m_Db->m_Archetypes) { if (arch.m_NumEntities != 0) { numArchetypesInUse++; } }
+		for (Archetype* pArchetype : m_Db->m_Archetypes) { if (pArchetype->m_NumEntities != 0) { numArchetypesInUse++; } }
 
 		std::cout << "-------------------------------------------------------------------" << std::endl;
 		std::cout << "	Entity Admin State" << std::endl;
@@ -296,11 +314,11 @@ namespace CKE {
 
 		std::cout << "-------------------------------------------------------------------" << std::endl;
 
-		for (Archetype& arch : m_Db->m_Archetypes) {
-			if (arch.m_NumEntities == 0) { continue; }
+		for (Archetype* pArchetype : m_Db->m_Archetypes) {
+			if (pArchetype->m_NumEntities == 0) { continue; }
 
-			std::cout << "Archetype " << arch.m_ID << " - " << arch.m_NumEntities << " Entities" << std::endl;
-			Vector<ComponentTypeID>& sortedSet = arch.m_ComponentSet;
+			std::cout << "Archetype " << pArchetype->m_ID << " - " << pArchetype->m_NumEntities << " Entities" << std::endl;
+			Vector<ComponentTypeID>& sortedSet = pArchetype->m_ComponentSet;
 			std::sort(sortedSet.begin(), sortedSet.end());
 			for (auto compID : sortedSet) {
 				std::cout << "    " << m_Db->m_ComponentTypeData.at(compID).m_Name << std::endl;
