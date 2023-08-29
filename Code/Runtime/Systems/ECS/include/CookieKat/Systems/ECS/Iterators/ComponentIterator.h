@@ -11,6 +11,12 @@ namespace CKE {
 }
 
 namespace CKE {
+	struct ComponentIteratorConfiguration
+	{
+		Vector<ArchetypeColumnPair> const* m_AccessData;
+		u32 m_TotalEntitiesCount;
+	};
+
 	// Iterator for single-component queries
 	class ComponentIter
 	{
@@ -20,14 +26,13 @@ namespace CKE {
 
 		ComponentIter(Vector<ArchetypeColumnPair> const& accessData, u64 totalEntitiesCount);
 
-		// DEPRECATED
-		ComponentIter(EntityDatabase* pEntityAdmin, ComponentTypeID componentID);
+		explicit ComponentIter(ComponentIteratorConfiguration& config);
 
 		// Utility Accessors
 		//-----------------------------------------------------------------------------
 
 		// Returns the total number of elements/entities in the iterator
-		inline u64 GetNumElements() const;
+		inline u32 GetNumElements() const;
 
 		// Range-for iterator
 		//-----------------------------------------------------------------------------
@@ -43,14 +48,14 @@ namespace CKE {
 		inline void BeginIteratorSetup();
 
 	protected:
-		u64 m_CurrRowInArch = 0;
-		u64 m_CurrCompColumn = 0;
+		u32 m_CurrRowInArch = 0;
+		u32 m_CurrCompColumn = 0;
 
-		u64 m_CurrArchAccessDataIndex = 0; // Current index in the archetype component access data
-		u64 m_NumRowsInCurrArch = 0;       // Total number of components in current archetype
+		u32 m_CurrArchAccessDataIndex = 0; // Current index in the archetype component access data
+		u32 m_NumRowsInCurrArch = 0;       // Total number of components in current archetype
 
-		u64 m_NumEntitiesTotal = 0;     // Total number of entities to iterate in all archetypes
-		u64 m_NumEntitiesProcessed = 0; // Total number of entities already iterated
+		u32 m_NumEntitiesTotal = 0;     // Total number of entities to iterate in all archetypes
+		u32 m_NumEntitiesProcessed = 0; // Total number of entities already iterated
 
 		// Cached variables to avoid constant lookups
 		Archetype*      m_pCurrArch = nullptr;
@@ -66,7 +71,8 @@ namespace CKE {
 	class TComponentIterator : public ComponentIter
 	{
 	public:
-		explicit TComponentIterator(EntityDatabase* pEntityAdmin) : ComponentIter{pEntityAdmin, ComponentStaticTypeID<T>::s_CompID} {}
+		TComponentIterator(Vector<ArchetypeColumnPair> const& accessData, u64 totalEntitiesCount)
+			: ComponentIter{accessData, totalEntitiesCount} {}
 
 		// Range-for iterator
 		inline TComponentIterator begin();
@@ -84,7 +90,7 @@ namespace CKE {
 
 
 namespace CKE {
-	u64 ComponentIter::GetNumElements() const {
+	u32 ComponentIter::GetNumElements() const {
 		return m_NumEntitiesTotal;
 	}
 

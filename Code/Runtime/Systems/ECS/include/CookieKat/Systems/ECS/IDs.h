@@ -9,34 +9,63 @@ namespace CKE {
 }
 
 namespace CKE {
+	// General Purpose ID Types
+	//-----------------------------------------------------------------------------
+
+	template <typename T>
+	class StronglyTypedID
+	{
+	public:
+		StronglyTypedID() = default;
+		explicit StronglyTypedID(u32 value) : m_Value{value} {}
+
+		inline static StronglyTypedID Invalid() { return StronglyTypedID{}; } // Returns an invalid entity ID
+
+		inline u32  GetValue() const { return m_Value; } // Returns the underlying value of the ID
+		inline bool IsValid() const { return m_Value != 0; }
+
+		inline StronglyTypedID& operator=(StronglyTypedID const& other) {
+			m_Value = other.m_Value;
+			return *this;
+		}
+
+		inline bool operator==(StronglyTypedID const& other) const { return m_Value == other.m_Value; }
+		inline bool operator!=(StronglyTypedID const& other) const { return !(*this == other); }
+		inline bool operator<(StronglyTypedID const& other) const { return m_Value < other.m_Value; }
+
+	public:
+		u32 m_Value = 0;
+	};
+
+	template <typename Tag, typename T>
+	struct StronglyTypedValue
+	{
+		T m_Value{};
+	};
+
 	// Identifiers for many of the system structures
 	//-----------------------------------------------------------------------------
 
-	// Strongly type integer to represent an Entity ID
-	class EntityID
-	{
-	public:
-		inline explicit EntityID() : m_Value(0) {}              // Constructs an invalid entity ID
-		inline explicit EntityID(u32 value) : m_Value(value) {} // Constructs an entity ID with the given underlying value
+	using EntityID = StronglyTypedID<struct EntityID_Tag>;
+	using ComponentTypeID = StronglyTypedID<struct ComponentTypeID_Tag>;
+	using ArchetypeID = StronglyTypedID<struct ArchetypeID_Tag>;
+	using ComponentSetID = StronglyTypedID<struct ComponentSetID_Tag>;
 
-		inline static EntityID Invalid() { return EntityID{}; } // Returns an invalid entity ID
-		inline bool            IsValid() const { return m_Value != 0; }
-		inline u32             GetValue() const { return m_Value; } // Returns the underlying value of the ID
-
-		inline bool operator==(const EntityID& other) const { return m_Value == other.m_Value; }
-		inline bool operator!=(const EntityID& other) const { return !(*this == other); }
-
-	private:
-		u32 m_Value;
-	};
-
-	// TODO: Implement these IDs as strongly-typed
-	using ComponentTypeID = u64;
-	using ArchetypeID = u64;
-	using ComponentSetID = u64;
-	using ArchetypeComponentColumn = u64;
+	using ArchetypeComponentColumn = u32;
 
 	// Todo: Improve the interface for this structure
+	class ComponentSet2
+	{
+	public:
+		void                                  AddComponent(ComponentTypeID componentTypeID);
+		void                                  RemoveComponent(ComponentTypeID componentTypeID);
+		void                                  MergeWith(ComponentSet2 const& otherSet);
+		inline Vector<ComponentTypeID> const& GetVector() const { return m_Components; }
+
+	private:
+		Vector<ComponentTypeID> m_Components;
+	};
+
 	using ComponentSet = Vector<ComponentTypeID>;
 
 	//-----------------------------------------------------------------------------
@@ -69,14 +98,18 @@ namespace CKE {
 	template <typename T>
 	struct ComponentStaticTypeID
 	{
-		inline static ComponentTypeID s_CompID = 0;
+		inline static ComponentTypeID GetTypeID() { return s_CompID; }
+
+		inline static ComponentTypeID s_CompID = ComponentTypeID::Invalid();
 	};
 }
 
-template <>
-struct std::hash<CKE::EntityID>
-{
-	inline std::size_t operator()(const CKE::EntityID& k) const noexcept {
-		return k.GetValue();
-	}
-};
+namespace std {
+	template <typename T>
+	struct hash<CKE::StronglyTypedID<T>>
+	{
+		inline std::size_t operator()(const CKE::StronglyTypedID<T>& id) const noexcept {
+			return id.GetValue();
+		}
+	};
+}

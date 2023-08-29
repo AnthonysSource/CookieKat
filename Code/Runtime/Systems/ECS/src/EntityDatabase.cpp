@@ -12,34 +12,37 @@ namespace CKE {
 		m_Archetypes.reserve(250'000);
 	}
 
-	void EntityDatabase::Shutdown() { }
+	void EntityDatabase::Shutdown() {
+	}
 
 	ComponentTypeID EntityDatabase::RegisterComponent(const char* name, u64 sizeInBytes, u32 alignment) {
-		m_LastComponentID++;
+		m_LastComponentTypeID = ComponentTypeID{m_LastComponentTypeID.GetValue() + 1};
 
 		ComponentTypeData typeData{};
 		typeData.m_Name = name;
 		typeData.m_SizeInBytes = sizeInBytes;
 		typeData.m_Alignment = alignment;
 
-		m_ComponentTypeData.insert({m_LastComponentID, typeData});
-		m_ComponentTypes.push_back(m_LastComponentID);
-		return m_LastComponentID;
+		m_ComponentTypeData.insert({m_LastComponentTypeID, typeData});
+		m_ComponentTypes.push_back(m_LastComponentTypeID);
+		return m_LastComponentTypeID;
 	}
 
 	ComponentSetID EntityDatabase::CalculateComponentSetID(Vector<ComponentTypeID> const& componentSet) {
-		Vector<ComponentTypeID> compVec = componentSet;
-		std::sort(compVec.begin(), compVec.end());
+		Vector<ComponentTypeID> set = componentSet;
+		std::sort(set.begin(), set.end(),
+		          [](ComponentTypeID const& lhs, ComponentTypeID const& rhs) {
+			          return lhs.GetValue() < rhs.GetValue();
+		          });
 
-		ComponentSetID id = 254633;
-		for (int i = 0; i < compVec.size(); ++i) {
-			id ^= std::hash<ComponentSetID>()(compVec[i]) << i;
+		u32 id = 254633;
+		for (u32 i = 0; i < set.size(); ++i) {
+			id ^= set[i].GetValue() << i;
 		}
-		return id;
+		return ComponentSetID{id};
 	}
 
-	ArchetypeComponentColumn EntityDatabase::GetComponentColumnInArchetype(
-		ComponentTypeID component, ArchetypeID archetypeID) const {
+	u32 EntityDatabase::GetComponentColumnInArchetype(ComponentTypeID component, ArchetypeID archetypeID) const {
 		CKE_ASSERT(m_ComponentToArchetypes.contains(component));
 		CKE_ASSERT(m_ComponentToArchetypes.at(component).contains(archetypeID));
 
@@ -48,13 +51,14 @@ namespace CKE {
 
 	void EntityDatabase::CreateArchetype(Vector<ComponentTypeID> const& componentSet) {
 		// Generate a new archetype ID
-		m_LastArchetypeID++;
+		m_LastArchetypeID = ArchetypeID{m_LastArchetypeID.GetValue() + 1};
 
 		// Calculate an unique ID for the given component set
 		ComponentSetID componentSetID = CalculateComponentSetID(componentSet);
 
 		// Create the archetype and initialize some basic data
 		Archetype* pArchetype = m_ArchetypesPool.New(Archetype{m_LastArchetypeID, componentSet, m_MaxNumEntities});
+		m_Archetypes.push_back(pArchetype);
 
 		// Set data relationships
 		m_ComponentSetToArchetype.insert({componentSetID, pArchetype});
@@ -243,7 +247,7 @@ namespace CKE {
 		std::cout << "-------------------------------------------------------------------" << std::endl;
 
 		for (auto& compTypePair : m_ComponentTypeData) {
-			std::cout << "ID: " << compTypePair.first << " - " << compTypePair.second.m_Name << " - " <<
+			std::cout << "ID: " << compTypePair.first.GetValue() << " - " << compTypePair.second.m_Name << " - " <<
 					compTypePair.second.m_SizeInBytes << " Bytes" << std::endl;
 		}
 
@@ -252,10 +256,8 @@ namespace CKE {
 		for (Archetype const* pArchetype : m_Archetypes) {
 			if (pArchetype->m_NumEntities == 0) { continue; }
 
-			std::cout << "Archetype " << pArchetype->m_ID << " - " << pArchetype->m_NumEntities << " Entities" << std::endl;
-			Vector<ComponentTypeID> sortedSet = pArchetype->m_ComponentSet;
-			std::sort(sortedSet.begin(), sortedSet.end());
-			for (auto compID : sortedSet) {
+			std::cout << "Archetype " << pArchetype->m_ID.GetValue() << " - " << pArchetype->m_NumEntities << " Entities" << std::endl;
+			for (ComponentTypeID const& compID : pArchetype->m_ComponentSet) {
 				std::cout << "    " << m_ComponentTypeData.at(compID).m_Name << std::endl;
 			}
 			std::cout << std::endl;
@@ -308,7 +310,7 @@ namespace CKE {
 		std::cout << "-------------------------------------------------------------------" << std::endl;
 
 		for (auto& compTypePair : m_Db->m_ComponentTypeData) {
-			std::cout << "ID: " << compTypePair.first << " - " << compTypePair.second.m_Name << " - " <<
+			std::cout << "ID: " << compTypePair.first.GetValue() << " - " << compTypePair.second.m_Name << " - " <<
 					compTypePair.second.m_SizeInBytes << " Bytes" << std::endl;
 		}
 
@@ -317,10 +319,8 @@ namespace CKE {
 		for (Archetype* pArchetype : m_Db->m_Archetypes) {
 			if (pArchetype->m_NumEntities == 0) { continue; }
 
-			std::cout << "Archetype " << pArchetype->m_ID << " - " << pArchetype->m_NumEntities << " Entities" << std::endl;
-			Vector<ComponentTypeID>& sortedSet = pArchetype->m_ComponentSet;
-			std::sort(sortedSet.begin(), sortedSet.end());
-			for (auto compID : sortedSet) {
+			std::cout << "Archetype " << pArchetype->m_ID.GetValue() << " - " << pArchetype->m_NumEntities << " Entities" << std::endl;
+			for (ComponentTypeID const& compID : pArchetype->m_ComponentSet) {
 				std::cout << "    " << m_Db->m_ComponentTypeData.at(compID).m_Name << std::endl;
 			}
 			std::cout << std::endl;
@@ -371,18 +371,33 @@ namespace CKE {
 	}
 
 	EntityComponentIterator EntityDatabase::GetEntityIterator(ComponentTypeID componentID) {
-		EntityComponentIterator componentIterator(this, componentID);
+		Vector<ArchetypeColumnPair> accessData;
+		u64                         totalEntitiesCount = 0;
+		QuerySingleComponent(componentID, accessData, totalEntitiesCount);
+		EntityComponentIterator componentIterator(accessData, totalEntitiesCount);
 		return componentIterator;
 	}
 
-	void EntityDatabase::QueryArchetypes(QueryInfo const& queryInfo) {
+	void EntityDatabase::Query(QueryInfo const& queryInfo, QueryResult* result) {
 		Vector<ArchetypeID> matchedArchetypes;
 		u64                 totalEntitiesCount = 0;
 
 		CKE_ASSERT(queryInfo.m_QueryElementsCount > 0);
 
+		// Early exit if there aren't entities that match the requested characteristics
+		for (i32 i = 0; i < queryInfo.m_QueryElementsCount; ++i) {
+			if (!m_ComponentToArchetypes.contains(queryInfo.m_QueryElements[i].m_ComponentTypeID)) {
+				result->m_MatchingArchetypes.clear();
+				result->m_TotalEntities = 0;
+				return;
+			}
+		}
+
+		// Broad-Phase to find all of the archetypes
+		//-----------------------------------------------------------------------------
+
 		// Acquire entities that match the first component
-		for (ArchetypeID const& archetypeID : m_ComponentToArchetypes.at(queryInfo.m_QueryElements[0].m_ComponentID) |
+		for (ArchetypeID const& archetypeID : m_ComponentToArchetypes.at(queryInfo.m_QueryElements[0].m_ComponentTypeID) |
 		     std::ranges::views::keys) {
 			matchedArchetypes.push_back(archetypeID);
 		}
@@ -392,7 +407,7 @@ namespace CKE {
 			QueryElement const& q = queryInfo.m_QueryElements[i];
 
 			for (i64 matchedArchIndex = matchedArchetypes.size() - 1; matchedArchIndex >= 0; --matchedArchIndex) {
-				if (!m_ComponentToArchetypes.at(q.m_ComponentID).contains(matchedArchetypes[matchedArchIndex])) {
+				if (!m_ComponentToArchetypes.at(q.m_ComponentTypeID).contains(matchedArchetypes[matchedArchIndex])) {
 					// Remove it and fill the gap
 					matchedArchetypes[matchedArchIndex] = matchedArchetypes[matchedArchetypes.size() - 1];
 					matchedArchetypes.pop_back();
@@ -404,12 +419,30 @@ namespace CKE {
 		for (ArchetypeID archID : matchedArchetypes) {
 			totalEntitiesCount += m_IDToArchetype.at(archID)->m_NumEntities;
 		}
+
+		// Narrow-Phase to get column indices of found archetypes
+		//-----------------------------------------------------------------------------
+
+		result->m_MatchingArchetypes.reserve(matchedArchetypes.size());
+		for (ArchetypeID archetypeID : matchedArchetypes) {
+			ArchetypeQueryResult r{};
+			r.m_ArchetypeID = archetypeID;
+			r.m_TotalRows = m_IDToArchetype[archetypeID]->m_NumEntities;
+
+			for (int i = 0; i < queryInfo.m_QueryElementsCount; ++i) {
+				QueryElement const& queryElement = queryInfo.m_QueryElements[i];
+				u64                 column = m_ComponentToArchetypes[queryElement.m_ComponentTypeID][archetypeID];
+				r.m_ComponentColumns.push_back(column);
+			}
+
+			result->m_MatchingArchetypes.emplace_back(r);
+			result->m_TotalEntities += r.m_TotalRows;
+		}
 	}
 
-	void EntityDatabase::QueryArchetypesSingleComponent(ComponentTypeID compTypeID, Vector<ArchetypeColumnPair>& accessData,
-	                                                    u64&            totalEntitiesCount) {
-		Map<ArchetypeID, Archetype*> const* pIDToArchetype = &m_IDToArchetype;
-
+	void EntityDatabase::QuerySingleComponent(ComponentTypeID              compTypeID,
+	                                          Vector<ArchetypeColumnPair>& accessData,
+	                                          u64&                         totalEntitiesCount) {
 		// Early exit if there isn't any archetype that contains the component
 		if (!m_ComponentToArchetypes.contains(compTypeID)) {
 			totalEntitiesCount = 0;
@@ -422,21 +455,53 @@ namespace CKE {
 		accessData.clear();
 		Map<ArchetypeID, ArchetypeComponentColumn> const& archetypeColumnMap = m_ComponentToArchetypes.at(compTypeID);
 		for (auto const& [archetypeID, compColumn] : archetypeColumnMap) {
-			accessData.emplace_back(ArchetypeColumnPair{pIDToArchetype->at(archetypeID), compColumn});
-			totalEntitiesCount += pIDToArchetype->at(archetypeID)->m_NumEntities;
+			accessData.emplace_back(ArchetypeColumnPair{m_IDToArchetype.at(archetypeID), compColumn});
+			totalEntitiesCount += m_IDToArchetype.at(archetypeID)->m_NumEntities;
 		}
 	}
 
 	ComponentIter EntityDatabase::GetSingleCompIter(ComponentTypeID componentID) {
 		Vector<ArchetypeColumnPair> accessData;
 		u64                         totalEntitiesCount = 0;
-		QueryArchetypesSingleComponent(componentID, accessData, totalEntitiesCount);
+		QuerySingleComponent(componentID, accessData, totalEntitiesCount);
 		ComponentIter compIterator(accessData, totalEntitiesCount);
 		return compIterator;
 	}
 
+	QueryResult EntityDatabase::QueryComponentSet(ComponentSet componentID) {
+		QueryResult queryResult{};
+
+		QueryInfo queryInfo{};
+		for (i32 i = 0; i < componentID.size(); ++i) {
+			QueryElement queryElement{};
+			queryElement.m_ComponentTypeID = componentID[i];
+			queryElement.m_Access = QueryAccess::ReadWrite;
+			queryElement.m_Op = QueryOp::And;
+
+			queryInfo.m_QueryElements[i] = queryElement;
+			queryInfo.m_QueryElementsCount++;
+		}
+		Query(queryInfo, &queryResult);
+
+		return queryResult;
+	}
+
+	Vector<IterationData> EntityDatabase::IterationDataFromQuery(QueryResult queryResult) {
+		Vector<IterationData> iterationData{};
+		for (ArchetypeQueryResult& r : queryResult.m_MatchingArchetypes) {
+			IterationData i{};
+			i.m_pArchetype = m_IDToArchetype[r.m_ArchetypeID];
+			i.m_TotalRows = queryResult.m_TotalEntities;
+			for (ArchetypeComponentColumn column : r.m_ComponentColumns) {
+				i.m_pComponentArrays.emplace_back(&i.m_pArchetype->m_ArchTable[column]);
+			}
+			iterationData.push_back(i);
+		}
+		return iterationData;
+	}
+
 	MultiComponentIter EntityDatabase::GetMultiCompIter(ComponentSet componentID) {
-		MultiComponentIter compIter(this, componentID);
+		MultiComponentIter compIter{IterationDataFromQuery(QueryComponentSet(componentID))};
 		return compIter;
 	}
 

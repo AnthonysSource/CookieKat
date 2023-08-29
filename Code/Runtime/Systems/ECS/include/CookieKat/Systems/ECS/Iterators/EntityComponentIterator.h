@@ -14,8 +14,8 @@ namespace CKE {
 	class EntityComponentIterator : public ComponentIter
 	{
 	public:
-		EntityComponentIterator(EntityDatabase* pEntityAdmin, ComponentTypeID componentID)
-			: ComponentIter{pEntityAdmin, componentID} {}
+		EntityComponentIterator(Vector<ArchetypeColumnPair> const& accessData, u64 totalEntitiesCount)
+			: ComponentIter{accessData, totalEntitiesCount} {}
 
 		inline EntityComponentIterator begin();
 		inline EntityComponentPair*    operator*();

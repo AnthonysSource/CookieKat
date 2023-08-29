@@ -5,6 +5,7 @@
 #include "IDs.h"
 #include "Archetype.h"
 #include "EntityQuery.h"
+#include "IteratorsUtilities.h"
 #include "Iterators/ComponentIterator.h"
 #include "Iterators/IteratorCommon.h"
 #include "Iterators/MultiComponentIterator.h"
@@ -28,9 +29,6 @@ namespace CKE {
 	class EntityDatabase
 	{
 	public:
-		// Create an uninitialized entity database
-		EntityDatabase() = default;
-
 		//-----------------------------------------------------------------------------
 		// Lifetime
 		//-----------------------------------------------------------------------------
@@ -79,7 +77,7 @@ namespace CKE {
 		// the supplied component set
 		//
 		// Example:
-		//   for(ComponentTuple* pTuple : db.GetMultiCompIter(positionID, velocityID)){
+		//   for(ComponentTuple* pTuple : db.GetMultiCompIter({positionID, velocityID})){
 		//	   Position* pPos = (Position*)compTuple->GetComponent(0);
 		//     Velocity* pVel = compTuple->GetComponent<Velocity>(1);
 		//     DoSomething(pPos, pVel);
@@ -284,9 +282,13 @@ namespace CKE {
 		// Queries
 		//-----------------------------------------------------------------------------
 
-		void QueryArchetypes(QueryInfo const& queryInfo);
+		void Query(QueryInfo const& queryInfo, QueryResult* result);
 
-		void QueryArchetypesSingleComponent(ComponentTypeID compTypeID, Vector<ArchetypeColumnPair>& accessData, u64& totalEntitiesCount);
+		void QuerySingleComponent(ComponentTypeID compTypeID, Vector<ArchetypeColumnPair>& accessData, u64& totalEntitiesCount);
+
+		QueryResult QueryComponentSet(ComponentSet componentID);
+
+		Vector<IterationData> IterationDataFromQuery(QueryResult queryResult);
 
 		//-----------------------------------------------------------------------------
 		// Debugging
@@ -307,10 +309,10 @@ namespace CKE {
 		// Auxiliary
 		//-----------------------------------------------------------------------------
 
-		ComponentSetID CalculateComponentSetID(Vector<ComponentTypeID> const& componentSet);
+		static ComponentSetID CalculateComponentSetID(Vector<ComponentTypeID> const& componentSet);
 
 		// Returns the component column of component in a given archetype
-		ArchetypeComponentColumn GetComponentColumnInArchetype(ComponentTypeID component, ArchetypeID archetypeID) const;
+		u32 GetComponentColumnInArchetype(ComponentTypeID component, ArchetypeID archetypeID) const;
 
 		void MoveComponentDataFromToArch(Archetype*       pOldArchetype, u64 oldArchetypeRow,
 		                                 Archetype*       pNewArchetype, u64 newArchetypeRow,
@@ -328,7 +330,6 @@ namespace CKE {
 		friend class ComponentIter;
 		friend class MultiComponentIter;
 
-	private:
 		Vector<EntityID>        m_Entities;       // All the active entities in the world
 		Vector<ComponentTypeID> m_ComponentTypes; // All of the component types
 
@@ -351,7 +352,8 @@ namespace CKE {
 
 		Map<ComponentTypeID, SingletonComponentRecord> m_IDToSingletonComponents;
 
-		Map<ComponentTypeID, ComponentTypeData> m_ComponentTypeData; // RTTI for components
+		// RTTI for components
+		Map<ComponentTypeID, ComponentTypeData> m_ComponentTypeData;
 
 		//-----------------------------------------------------------------------------
 
@@ -361,8 +363,8 @@ namespace CKE {
 		//-----------------------------------------------------------------------------
 
 		EntityID        m_NextEntityID{0};
-		ComponentTypeID m_LastComponentID = 0;
-		ArchetypeID     m_LastArchetypeID = 0;
+		ComponentTypeID m_LastComponentTypeID{0};
+		ArchetypeID     m_LastArchetypeID{0};
 	};
 }
 
@@ -392,7 +394,12 @@ namespace CKE {
 	};
 }
 
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Template and Inline implementations
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 
 namespace CKE {
@@ -431,13 +438,18 @@ namespace CKE {
 
 	template <typename T>
 	TComponentIterator<T> EntityDatabase::GetSingleCompIter() {
-		TComponentIterator<T> compIterator(this);
+		Vector<ArchetypeColumnPair> accessData;
+		u64                         totalEntitiesCount = 0;
+		QuerySingleComponent(ComponentStaticTypeID<T>::GetTypeID(), accessData, totalEntitiesCount);
+		TComponentIterator<T> compIterator(accessData, totalEntitiesCount);
 		return compIterator;
 	}
 
 	template <typename T, typename... Other>
 	TMultiComponentIter<T, Other...> EntityDatabase::GetMultiCompTupleIter() {
-		TMultiComponentIter<T, Other...> iter(this);
+		Vector<ComponentTypeID> componentIDs;
+		IteratorsUtilities::PopulateVectorWithComponentIDs<0, T, Other...>(componentIDs);
+		TMultiComponentIter<T, Other...> iter(IterationDataFromQuery(QueryComponentSet(componentIDs)));
 		return iter;
 	}
 
@@ -454,20 +466,11 @@ namespace CKE {
 		}
 	}
 
-	template <size_t I, typename... Ts>
-	constexpr void PopulateVectorWithComponentIDs(Vector<ComponentTypeID>& vec) {
-		if constexpr (I == sizeof...(Ts)) { return; }
-		else {
-			vec.emplace_back(ComponentStaticTypeID<std::tuple_element_t<I, std::tuple<Ts...>>>::s_CompID);
-			PopulateVectorWithComponentIDs<I + 1, Ts...>(vec);
-		}
-	}
-
 	template <typename T, typename... Other>
 	MultiComponentIter EntityDatabase::GetMultiCompIter() {
 		Vector<ComponentTypeID> componentIDs;
-		PopulateVectorWithComponentIDs<0, T, Other...>(componentIDs);
-		return MultiComponentIter(this, componentIDs);
+		IteratorsUtilities::PopulateVectorWithComponentIDs<0, T, Other...>(componentIDs);
+		return GetMultiCompIter(componentIDs);
 	}
 
 	template <typename T>
@@ -484,7 +487,7 @@ namespace CKE {
 
 	template <typename T>
 	T* EntityDatabase::GetSingletonComponent() {
-		CKE_ASSERT(ComponentStaticTypeID<T>::s_CompID != 0);
+		CKE_ASSERT(ComponentStaticTypeID<T>::GetTypeID().m_Value != 0);
 		return reinterpret_cast<T*>(GetSingletonComponent(ComponentStaticTypeID<T>::s_CompID));
 	}
 

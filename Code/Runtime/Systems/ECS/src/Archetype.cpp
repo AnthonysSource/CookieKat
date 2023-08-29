@@ -17,7 +17,7 @@ namespace CKE {
 		//}
 	}
 
-	EntityID Archetype::RemoveEntityRow(u64 entityRow) {
+	EntityID Archetype::RemoveEntityRow(u32 entityRow) {
 		CKE_ASSERT(m_NumEntities > 0);
 
 		EntityID movedEntityID = m_RowIndexToEntity[m_NumEntities - 1];
@@ -32,12 +32,12 @@ namespace CKE {
 		return movedEntityID;
 	}
 
-	u64 Archetype::AddEntityRow(EntityID associatedEntity) {
+	u32 Archetype::AddEntityRow(EntityID associatedEntity) {
 		m_NumEntities++;
 
 		// Create a row in all of the component arrays
 		// for the entity data
-		u64 entityArchetypeRow = -1;
+		u32 entityArchetypeRow = -1;
 		for (auto&& componentArray : m_ArchTable) {
 			entityArchetypeRow = componentArray.AppendComponentToEnd();
 		}

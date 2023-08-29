@@ -1,4 +1,4 @@
-#include "Core/Profilling/Profilling.h"
+#include "CookieKat/Core/Profilling/Profilling.h"
 #include "CookieKat/Systems/ECS/EntityDatabase.h"
 #include "CookieKat/Systems/TaskSystem/TaskSystem.h"
 

@@ -29,7 +29,6 @@ namespace CKE {
 		void Add(Vector<ComponentTypeID> ids);
 		void Remove(Vector<ComponentTypeID> ids);
 		void CombineWith(QueryComponentGroup& other);
-		inline ComponentSet const& GetSet() { return m_Components; }
 
 	private:
 		Vector<ComponentSetID> m_Components;

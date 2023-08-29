@@ -418,7 +418,6 @@ void Game::World_Everything(CKE::EntityDatabase& db, CKE::EntitySystem* system) 
 	db.RegisterComponent<LocalToWorldComponent>();
 	db.RegisterComponent<MeshComponent>();
 	db.RegisterComponent<CameraComponent>();
-	db.RegisterComponent<VelocityComponent>();
 	db.RegisterComponent<PointLightComponent>();
 
 	system->AddSystem<FlyCameraSystem>();

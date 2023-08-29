@@ -65,6 +65,9 @@ namespace CKE {
 		// Destroys a buffer associated with the given handle
 		void DestroyBuffer(BufferHandle bufferHandle);
 
+		void* MapBuffer(BufferHandle bufferHandle);
+		void UnMapBuffer(BufferHandle bufferHandle);
+
 		// -- DEPRECATED --
 		// Returns a pointer to the mapped memory space of the given buffer
 		//
