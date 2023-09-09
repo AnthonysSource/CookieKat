@@ -8,11 +8,11 @@
 namespace CKE {
 	struct ResourceRecord
 	{
-		ResourceID         m_ID;                  // Runtime identifier in the database
-		Path               m_Path;                // Unique identifier and resource relative path in the file system
+		ResourceID         m_ID{};                  // Runtime identifier in the database
+		Path               m_Path{};                // Unique identifier and resource relative path in the file system
 		IResource*         m_pResource = nullptr; // Ptr to the resource
-		Vector<ResourceID> m_Dependencies;        // Resources that *are used* by this resource
-		Vector<ResourceID> m_Users;               // Resources that *use* this resource
+		Vector<ResourceID> m_Dependencies{};        // Resources that *are used* by this resource
+		Vector<ResourceID> m_Users{};               // Resources that *use* this resource
 		bool               m_IsReadyToUse = false;
 	};
 
@@ -38,20 +38,20 @@ namespace CKE {
 
 	struct PendingLoadRequest
 	{
-		Path                m_Path;          // Path of the resource
-		ResourceID          m_ResourceID;    // ID assigned to the resource
-		RequesterInfo       m_RequesterInfo; // Who requested the resource
-		ResourceRecord*     m_pRecord;
-		InstallDependencies m_Deps;
+		Path                m_Path{};          // Path of the resource
+		ResourceID          m_ResourceID{};    // ID assigned to the resource
+		RequesterInfo       m_RequesterInfo{}; // Who requested the resource
+		ResourceRecord*     m_pRecord = nullptr;
+		InstallDependencies m_Deps{};
 	};
 
 	// State of an In-Progress Request
 	struct AsyncLoadRequestState
 	{
-		Path            m_Path;
-		ResourceID      m_ResourceID;
+		Path            m_Path{};
+		ResourceID      m_ResourceID{};
 		Vector<u8>      m_RawData{};
 		ResourceLoader* m_pLoader = nullptr;
-		LoadOutput      m_LoadOutput;
+		LoadOutput      m_LoadOutput{};
 	};
 }

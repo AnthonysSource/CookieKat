@@ -3,7 +3,6 @@
 #include "CommonShapes.h"
 #include "RenderSandboxEnv.h"
 #include "CookieKat/Systems/RenderAPI/RenderDevice.h"
-#include "CookieKat/Systems/FrameGraph/FrameGraph.h"
 
 namespace CKE {
 	class RenderAPI_ComputeVertex : public IRenderSandboxTest
@@ -18,14 +17,13 @@ namespace CKE {
 
 		void Setup(RenderDevice* pDevice) override {
 			BufferDesc bufferDesc{};
-			bufferDesc.m_Name = "Triangle Buffer";
+			bufferDesc.m_DebugName = "Triangle Buffer";
 			bufferDesc.m_MemoryAccess = MemoryAccess::GPU;
 			bufferDesc.m_SizeInBytes = sizeof(CommonShapes::m_TriangleVerts);
 			bufferDesc.m_StrideInBytes = sizeof(TriangleVert);
-			bufferDesc.m_Usage = BufferUsage::Vertex | BufferUsage::Storage | BufferUsage::TransferDst;
-			bufferDesc.m_UpdateFrequency = UpdateFrequency::Static;
-			m_TriangleBuffer = pDevice->CreateBuffer_DEPR(bufferDesc, CommonShapes::m_TriangleVerts.data(),
-			                                              sizeof(CommonShapes::m_TriangleVerts));
+			bufferDesc.m_Usage = BufferUsageFlags::Vertex | BufferUsageFlags::Storage | BufferUsageFlags::TransferDst;
+			bufferDesc.m_DuplicationStrategy = DuplicationStrategy::Unique;
+			m_TriangleBuffer = pDevice->CreateBuffer(bufferDesc);
 
 			PipelineLayoutDesc compLayoutDesc{};
 			compLayoutDesc.SetShaderBindings({
@@ -83,7 +81,7 @@ namespace CKE {
 			pDevice->SubmitComputeCommandList(compList, computeSubmitInfo);
 
 
-			GraphicsCommandList gfxList = pDevice->GetGraphicsCmdList();
+			CommandList gfxList = pDevice->GetGraphicsCmdList();
 			gfxList.Begin();
 
 			TextureBarrierDescription barrierDesc{};
@@ -110,7 +108,7 @@ namespace CKE {
 			});
 
 			gfxList.SetDefaultViewportScissor(pDevice->GetBackBufferSize());
-			gfxList.SetPipeline(m_GraphicsPipeline);
+			gfxList.SetGraphicsPipeline(m_GraphicsPipeline);
 			gfxList.SetVertexBuffer(m_TriangleBuffer);
 			gfxList.Draw(3, 1, 0, 0);
 

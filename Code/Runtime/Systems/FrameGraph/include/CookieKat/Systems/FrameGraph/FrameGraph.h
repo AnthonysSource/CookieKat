@@ -132,7 +132,7 @@ namespace CKE {
 
 	private:
 		void CreateTransientResources(FrameGraphSetupContext setupCtx);
-		void RecordResouceTransitions(GraphicsCommandList& cmdList, RenderPassData& renderPass);
+		void RecordResouceTransitions(CommandList& cmdList, RenderPassData& renderPass);
 
 		void ClearCurrentCompilation();
 
@@ -168,13 +168,13 @@ namespace CKE {
 			m_SetupFunc(setup);
 		}
 
-		inline void Execute(ExecuteResourcesCtx& ctx, GraphicsCommandList& cmdList, RenderDevice& rd) override {
+		inline void Execute(ExecuteResourcesCtx& ctx, CommandList& cmdList, RenderDevice& rd) override {
 			m_ExecuteFunc(ctx, cmdList, rd);
 		}
 
 	private:
 		Func<void(FrameGraphSetupContext& setup)>                                            m_SetupFunc;
-		Func<void(ExecuteResourcesCtx& ctx, GraphicsCommandList& cmdList, RenderDevice& rd)> m_ExecuteFunc;
+		Func<void(ExecuteResourcesCtx& ctx, CommandList& cmdList, RenderDevice& rd)> m_ExecuteFunc;
 	};
 
 	template <typename SetupFunc, typename ExecuteFunc>

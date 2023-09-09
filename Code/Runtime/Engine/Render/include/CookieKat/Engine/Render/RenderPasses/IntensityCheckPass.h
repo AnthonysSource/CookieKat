@@ -32,7 +32,7 @@ namespace CKE {
 		IntensityCheckPass(RenderPassInitCtx& initCtx);
 
 		void Setup(FrameGraphSetupContext& setup) override;
-		void Execute(ExecuteResourcesCtx& ctx, GraphicsCommandList& cmdList, RenderDevice& rd) override;
+		void Execute(ExecuteResourcesCtx& ctx, CommandList& cmdList, RenderDevice& rd) override;
 
 	private:
 		EntityDatabase*       m_pAdmin = nullptr;

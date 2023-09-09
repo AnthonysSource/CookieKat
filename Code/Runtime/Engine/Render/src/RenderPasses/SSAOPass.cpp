@@ -91,7 +91,7 @@ namespace CKE {
 		setup.UseBuffer(SceneGlobal::View);
 
 		TextureDesc ssaoTexDesc{};
-		ssaoTexDesc.m_Name = "SSAO Texture";
+		ssaoTexDesc.m_DebugName = "SSAO Texture";
 		ssaoTexDesc.m_Format = TextureFormat::R8G8B8A8_UNORM;
 		ssaoTexDesc.m_AspectMask = TextureAspectMask::Color;
 		ssaoTexDesc.m_TextureType = TextureType::Tex2D;
@@ -100,16 +100,16 @@ namespace CKE {
 		setup.UseTexture(SSAO_Raw, FGPipelineAccessInfo::ColorAttachmentWrite());
 
 		BufferDesc samplingBufferDesc{};
-		samplingBufferDesc.m_Name = "Sampling Data";
-		samplingBufferDesc.m_Usage = BufferUsage::Uniform | BufferUsage::TransferDst;
-		samplingBufferDesc.m_MemoryAccess = MemoryAccess::CPU_GPU;
-		samplingBufferDesc.m_UpdateFrequency = UpdateFrequency::Static;
+		samplingBufferDesc.m_DebugName = "Sampling Data";
+		samplingBufferDesc.m_Usage = BufferUsageFlags::Uniform | BufferUsageFlags::TransferDst;
+		samplingBufferDesc.m_MemoryAccess = MemoryAccess::CPU_GPU_Coherent;
+		samplingBufferDesc.m_DuplicationStrategy = DuplicationStrategy::Unique;
 		samplingBufferDesc.m_SizeInBytes = sizeof(SSAOSamplingDataGPU);
 		setup.CreateTransientBuffer(SamplingBuffer, samplingBufferDesc);
 		setup.UseBuffer(SamplingBuffer);
 	}
 
-	void SSAOPass::Execute(ExecuteResourcesCtx& ctx, GraphicsCommandList& cmdList,
+	void SSAOPass::Execute(ExecuteResourcesCtx& ctx, CommandList& cmdList,
 	                       RenderDevice&         rd) {
 		BufferHandle sampling = ctx.GetBuffer(SamplingBuffer);
 		BufferHandle view = ctx.GetBuffer(SceneGlobal::View);
@@ -134,7 +134,7 @@ namespace CKE {
 			.m_UseDepthAttachment = false,
 		});
 
-		cmdList.SetPipeline(m_Pipeline);
+		cmdList.SetGraphicsPipeline(m_Pipeline);
 		cmdList.SetDefaultViewportScissor(m_pRenderingSettings->m_Viewport.m_Extent);
 
 		// Shader Bindings
@@ -190,7 +190,7 @@ namespace CKE {
 
 	void BlurPass::Setup(FrameGraphSetupContext& setup) {
 		TextureDesc ssaoBlurredTexDesc{};
-		ssaoBlurredTexDesc.m_Name = "SSAO Blurred Texture";
+		ssaoBlurredTexDesc.m_DebugName = "SSAO Blurred Texture";
 		ssaoBlurredTexDesc.m_Format = TextureFormat::R8G8B8A8_UNORM;
 		ssaoBlurredTexDesc.m_AspectMask = TextureAspectMask::Color;
 		ssaoBlurredTexDesc.m_TextureType = TextureType::Tex2D;
@@ -200,7 +200,7 @@ namespace CKE {
 		setup.UseTexture(SSAOPass::SSAO_Raw, FGPipelineAccessInfo::FragmentShaderRead());
 	}
 
-	void BlurPass::Execute(ExecuteResourcesCtx& ctx, GraphicsCommandList& cmdList,
+	void BlurPass::Execute(ExecuteResourcesCtx& ctx, CommandList& cmdList,
 	                       RenderDevice&         rd) {
 		TextureViewHandle ssaoRaw = ctx.GetTextureView(SSAOPass::SSAO_Raw);
 		TextureViewHandle blurredOut = ctx.GetTextureView(SSAOPass::SSAO_Blurred);
@@ -218,7 +218,7 @@ namespace CKE {
 			.m_UseDepthAttachment = false,
 		});
 
-		cmdList.SetPipeline(m_Pipeline);
+		cmdList.SetGraphicsPipeline(m_Pipeline);
 		cmdList.SetDefaultViewportScissor(m_pRenderingSettings->m_Viewport.m_Extent);
 
 		// Shader Bindings

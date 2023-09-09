@@ -10,7 +10,7 @@ namespace CKE {
 	class DepthPrePass;
 	class SkyBoxPass;
 	class RenderSceneManager;
-	class GraphicsCommandList;
+	class CommandList;
 }
 
 namespace CKE {

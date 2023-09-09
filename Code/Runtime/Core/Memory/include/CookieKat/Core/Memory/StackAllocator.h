@@ -5,14 +5,16 @@
 #include "CookieKat/Core/Containers/Containers.h"
 
 namespace CKE {
-	// Allocates memory linearly from a given buffer and
-	// allows releasing the last allocated block
+	// Allocates memory linearly from a given buffer,
+	// allowing the release of the last block individually
 	class StackAllocator
 	{
 	public:
 		// Initialize the allocator with an existing memory block
-		// that it will manage and its size
 		StackAllocator(void* pMemoryBlock, u64 sizeInBytes);
+
+		// Allocates a memory block of the given size using the default CKE::Alloc(...) function
+		StackAllocator(u64 sizeInBytes);
 
 		//-----------------------------------------------------------------------------
 
@@ -28,6 +30,9 @@ namespace CKE {
 		// Frees the last allocated memory block
 		void FreeLast();
 
+		// Frees all of the allocated memory blocks
+		void FreeAll();
+
 	private:
 		// TODO: Replace Stack with a container that doesn't use the heap
 		u8*        m_pBuffer;           // Ptr to the memory block managed by the allocator
@@ -36,8 +41,11 @@ namespace CKE {
 	};
 }
 
-// Template implementations
-//-----------------------------------------------------------------------------
+
+//=======================================================================
+//						Inline Definitions
+//=======================================================================
+
 
 namespace CKE {
 	template <typename T>
@@ -61,5 +69,11 @@ namespace CKE {
 
 	inline void StackAllocator::FreeLast() {
 		m_AllocationOffsets.pop();
+	}
+
+	inline void StackAllocator::FreeAll() {
+		while (!m_AllocationOffsets.empty()) {
+			m_AllocationOffsets.pop();
+		}
 	}
 }

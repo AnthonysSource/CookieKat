@@ -58,7 +58,7 @@ namespace CKE {
 
 	void IntensityCheckPass::Setup(FrameGraphSetupContext& setup) {
 		TextureDesc desc{};
-		desc.m_Name = "Intensity Texture";
+		desc.m_DebugName = "Intensity Texture";
 		desc.m_AspectMask = TextureAspectMask::Color;
 		desc.m_Format = TextureFormat::R8G8B8A8_SRGB;
 		desc.m_Usage = TextureUsage::Color_Attachment | TextureUsage::Sampled;
@@ -76,7 +76,7 @@ namespace CKE {
 		setup.UseTexture(GBuffer::ObjectIdx, FGPipelineAccessInfo::FragmentShaderRead());
 	}
 
-	void IntensityCheckPass::Execute(ExecuteResourcesCtx& ctx, GraphicsCommandList& cmdList, RenderDevice& rd) {
+	void IntensityCheckPass::Execute(ExecuteResourcesCtx& ctx, CommandList& cmdList, RenderDevice& rd) {
 		TextureViewHandle intensityTex = ctx.GetTextureView(IntensityCheckPass::Intensity);
 		TextureViewHandle lastSceneColor = ctx.GetTextureView(IntensityCheckPass::HistoryColor);
 		TextureViewHandle lastObjIdxTex = ctx.GetTextureView(IntensityCheckPass::HistoryObjectIdx);
@@ -95,7 +95,7 @@ namespace CKE {
 			.m_UseDepthAttachment = false,
 		});
 
-		cmdList.SetPipeline(m_Pipeline);
+		cmdList.SetGraphicsPipeline(m_Pipeline);
 		cmdList.SetDefaultViewportScissor(rd.GetBackBufferSize());
 
 		// Shader Bindings

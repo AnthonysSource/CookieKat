@@ -57,7 +57,7 @@ namespace CKE {
 
 	//-----------------------------------------------------------------------------
 
-	// A "ByteSize" bytes stack string that can hold "ByteSize-2" characters
+	// A "ByteSize" bytes stack allocated string that can hold "ByteSize - 2" characters
 	template <u16 ByteSize>
 	class FixedString
 	{

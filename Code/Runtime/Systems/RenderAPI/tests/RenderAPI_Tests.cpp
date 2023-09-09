@@ -87,7 +87,7 @@ TEST(Rendering, Open_Window)
 	RenderDevice device{};
 	glfwSetWindowUserPointer(pWindowHandle, &device);
 
-	device.PassRenderTargetData(glfwGetWin32Window(pWindowHandle));
+	device.SetRenderTargetData(glfwGetWin32Window(pWindowHandle));
 	device.Initialize({ s_WindowConfig.m_Width, s_WindowConfig.m_Height });
 
 	while (!glfwWindowShouldClose(pWindowHandle))

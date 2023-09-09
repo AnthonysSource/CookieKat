@@ -15,95 +15,60 @@ namespace CKE {
 	class CommandList
 	{
 	public:
-		friend RenderDevice;
-
 		CommandList() = default;
 
-		CommandList(RenderDevice* pRenderDevice, VkCommandBuffer cmdBuffer) :
-			m_pDevice(pRenderDevice), m_CmdBuffer(cmdBuffer) {}
+		CommandList(RenderDevice* pRenderDevice, VkCommandBuffer cmdBuffer);
 
-		// Being the recording of the command list
-		void Begin();
-		// End the recording of the command list
-		void End();
-
-		void BeginDebugLabel(const char* pName, Vec3 color);
-		void EndDebugLabel();
-
-	protected:
-		RenderDevice*   m_pDevice = nullptr;
-		VkCommandBuffer m_CmdBuffer{};
-	};
-
-	class GraphicsCommandList : public CommandList
-	{
-	public:
-		GraphicsCommandList() = default;
-
-		GraphicsCommandList(RenderDevice* pRenderDevice, VkCommandBuffer cmdBuffer):
-			CommandList(pRenderDevice, cmdBuffer) {}
+		void Begin(); // Being the recording of the command list
+		void End();   // End the recording of the command list
 
 		// Dynamic Rendering
 		void BeginRendering(RenderingInfo renderingInfo);
 		void EndRendering();
 
-		// Vertex Input
+		// Vertex & Index Buffers
+		void SetVertexBuffer(BufferHandle bufferHandle, u32 firstBinding, u32 bindingCount, u64 offset);
 		void SetVertexBuffer(BufferHandle bufferHandle);
+		void SetIndexBuffer(BufferHandle bufferHandle, u64 offset, IndicesFormat indicesFormat);
 		void SetIndexBuffer(BufferHandle bufferHandle, u64 offset);
 
-		// Drawing
+		// Draw
 		void Draw(u32 vertexCount, u32 instanceCount, u32 firstVertex, u32 firstInstance);
-		void DrawIndexed(u64 indexCount, u64 firstInstance);
 		void DrawIndexed(u32 indexCount, u32 instanceCount, u32 firstIndex, i32 vertexOffset, u32 firstInstance);
+		void DrawIndexed(u64 indexCount, u64 firstInstance);
 
 		// Pipeline
-		void SetPipeline(PipelineHandle pipeline);
+		void SetPipeline(PipelineHandle pipeline, PipelineBindPoint bindPoint);
+		void SetGraphicsPipeline(PipelineHandle pipeline);
 		void SetViewport(Vec2 offset, Vec2 size, Vec2 minMaxDepth);
 		void SetScissor(Int2 offset, UInt2 extent);
 		void SetDefaultViewportScissor(Vec2 size);
 
-		// Resource Bindings
-		void BindDescriptor(PipelineHandle pipeline, DescriptorSetHandle set);
-		void PushConstant(PipelineHandle pipeline, u64 size, void* data);
+		// Shader Bindings
+		void BindDescriptor(PipelineHandle pipeline, DescriptorSetHandle descriptorSet);
+		void PushConstant(PipelineHandle pipeline, u64 dataSize, void* data);
 
 		// Sync & Transitions
+		void Barrier(TextureBarrierDescription const* desc, u32 count);
 		void Barrier(TextureBarrierDescription desc);
-		void Barrier(Vector<TextureBarrierDescription> const& desc);
 
-	private:
-		friend class RenderDevice;
-	};
-
-	class TransferCommandList : public CommandList
-	{
-	public:
-		TransferCommandList() = default;
-
-		TransferCommandList(RenderDevice* pRenderDevice, VkCommandBuffer cmdBuffer) :
-			CommandList(pRenderDevice, cmdBuffer) {}
-
-		void Begin();
-
-		void Barrier(TextureBarrierDescription desc);
-		void CopyBuffer(BufferHandle src, BufferHandle dst, u64 size);
+		// Copy
+		void CopyBuffer(BufferHandle src, BufferHandle dst, BufferCopyInfo copyInfo);
 		void CopyTexture(TextureCopyInfo srcInfo, TextureCopyInfo dstInfo, UInt3 size);
-		void CopyBufferToTexture(BufferHandle src, TextureHandle dst, VkBufferImageCopy copyRegion);
-		void CopyTextureToBuffer(TextureHandle src, BufferHandle dst, VkBufferImageCopy copyRegion);
-	};
+		void CopyBufferToTexture(BufferHandle src, TextureHandle dst, BufferImageCopyInfo copyInfo);
+		void CopyTextureToBuffer(TextureHandle src, BufferHandle dst, BufferImageCopyInfo copyInfo);
 
-	class ComputeCommandList : public CommandList
-	{
-	public:
-		ComputeCommandList() = default;
-
-		ComputeCommandList(RenderDevice* pRenderDevice, VkCommandBuffer cmdBuffer) :
-			CommandList(pRenderDevice, cmdBuffer) {}
-
+		// Compute
 		void BindComputeDescriptor(PipelineHandle pipeline, DescriptorSetHandle set);
 		void SetComputePipeline(PipelineHandle pipeline);
 		void Dispatch(u32 groupCountX, u32 groupCountY, u32 groupCountZ);
 
+		// Debugging
+		void BeginDebugLabel(const char* pName, Vec3 color);
+		void EndDebugLabel();
+
 	private:
-		friend class RenderDevice;
+		RenderDevice*   m_pDevice = nullptr;
+		VkCommandBuffer m_CmdBuffer{};
 	};
 }

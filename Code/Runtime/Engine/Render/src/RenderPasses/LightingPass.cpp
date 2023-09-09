@@ -55,7 +55,7 @@ namespace CKE {
 		setup.UseBuffer(SceneGlobal::EnviorementData);
 
 		TextureDesc sceneColorDesc{};
-		sceneColorDesc.m_Name = "Scene Color";
+		sceneColorDesc.m_DebugName = "Scene Color";
 		sceneColorDesc.m_Format = TextureFormat::R32G32B32A32_SFLOAT;
 		sceneColorDesc.m_AspectMask = TextureAspectMask::Color;
 		sceneColorDesc.m_TextureType = TextureType::Tex2D;
@@ -64,7 +64,7 @@ namespace CKE {
 		setup.UseTexture(LightingPass::HDRSceneColor, FGPipelineAccessInfo::ColorAttachmentWrite());
 	}
 
-	void LightingPass::Execute(ExecuteResourcesCtx& ctx, GraphicsCommandList& cmdList,
+	void LightingPass::Execute(ExecuteResourcesCtx& ctx, CommandList& cmdList,
 	                           RenderDevice&         rd) {
 		TextureViewHandle sceneColor = ctx.GetTextureView(LightingPass::HDRSceneColor);
 
@@ -89,7 +89,7 @@ namespace CKE {
 			.m_UseDepthAttachment = false,
 		});
 
-		cmdList.SetPipeline(m_Pipeline);
+		cmdList.SetGraphicsPipeline(m_Pipeline);
 		cmdList.SetDefaultViewportScissor(m_pView->m_Viewport.m_Extent);
 
 		// Shader Bindings

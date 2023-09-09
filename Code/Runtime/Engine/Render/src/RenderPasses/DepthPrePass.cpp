@@ -20,7 +20,7 @@ namespace CKE {
 		setup.UseBuffer(SceneGlobal::View);
 
 		TextureDesc depthStencilDesc{};
-		depthStencilDesc.m_Name = "DepthStencil";
+		depthStencilDesc.m_DebugName = "DepthStencil";
 		depthStencilDesc.m_Format = TextureFormat::D24_UNORM_S8_UINT;
 		depthStencilDesc.m_AspectMask = TextureAspectMask::Depth | TextureAspectMask::Stencil;
 		depthStencilDesc.m_TextureType = TextureType::Tex2D;
@@ -36,7 +36,7 @@ namespace CKE {
 		u32 m_IndexCount;
 	};
 
-	void DepthPrePass::Execute(ExecuteResourcesCtx& ctx, GraphicsCommandList& cmdList, RenderDevice& rd) {
+	void DepthPrePass::Execute(ExecuteResourcesCtx& ctx, CommandList& cmdList, RenderDevice& rd) {
 		TextureViewHandle const depthStencil = ctx.GetTextureView(General::DepthStencil);
 		BufferHandle const      viewBuffer = ctx.GetBuffer(SceneGlobal::View);
 		BufferHandle const      objectBuffer = ctx.GetBuffer(SceneGlobal::ObjectData);
@@ -53,7 +53,7 @@ namespace CKE {
 			},
 		});
 
-		cmdList.SetPipeline(m_Pipeline);
+		cmdList.SetGraphicsPipeline(m_Pipeline);
 		cmdList.SetDefaultViewportScissor(m_pRenderingSettings->m_Viewport.m_Extent);
 
 		DescriptorSetBuilder      descriptorBuilder = rd.CreateDescriptorSetBuilder(m_Pipeline, 0);

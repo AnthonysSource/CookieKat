@@ -47,7 +47,7 @@ namespace CKE {
 		setup.UseTexture(GBuffer::DepthStencil, FGPipelineAccessInfo::DepthStencil());
 	}
 
-	void SkyBoxPass::Execute(ExecuteResourcesCtx& ctx, GraphicsCommandList& cmdList, RenderDevice& rd) {
+	void SkyBoxPass::Execute(ExecuteResourcesCtx& ctx, CommandList& cmdList, RenderDevice& rd) {
 		BufferHandle      view = ctx.GetBuffer(SceneGlobal::View);
 		TextureViewHandle sceneColor = ctx.GetTextureView(LightingPass::HDRSceneColor);
 		TextureViewHandle depthBuffer = ctx.GetTextureView(GBuffer::DepthStencil);
@@ -69,7 +69,7 @@ namespace CKE {
 			},
 		});
 
-		cmdList.SetPipeline(m_Pipeline);
+		cmdList.SetGraphicsPipeline(m_Pipeline);
 		cmdList.SetDefaultViewportScissor(m_pView->m_Viewport.m_Extent);
 
 		DescriptorSetBuilder setBuilder = rd.CreateDescriptorSetBuilder(m_Pipeline, 0);

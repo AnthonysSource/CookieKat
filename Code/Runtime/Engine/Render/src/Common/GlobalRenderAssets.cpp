@@ -46,21 +46,21 @@ namespace CKE {
 
 		ScreenQuad        screenQuad{};
 		BufferDesc screenQuadBufferDesc{};
-		screenQuadBufferDesc.m_Name = "ScreenQuad Buffer";
-		screenQuadBufferDesc.m_Usage = BufferUsage::Vertex | BufferUsage::TransferDst;
-		screenQuadBufferDesc.m_MemoryAccess = MemoryAccess::CPU_GPU;
+		screenQuadBufferDesc.m_DebugName = "ScreenQuad Buffer";
+		screenQuadBufferDesc.m_Usage = BufferUsageFlags::Vertex | BufferUsageFlags::TransferDst;
+		screenQuadBufferDesc.m_MemoryAccess = MemoryAccess::CPU_GPU_Coherent;
 		screenQuadBufferDesc.m_SizeInBytes = sizeof(ScreenQuad);
 		screenQuadBufferDesc.m_StrideInBytes = sizeof(screenQuad.m_Verts[0]);
-		m_ScreenQuad = m_Device.CreateBuffer_DEPR(screenQuadBufferDesc, &screenQuad.m_Verts, sizeof(screenQuad.m_Verts));
+		m_ScreenQuad = m_Device.CreateBuffer(screenQuadBufferDesc);
 
 		CubeMapMesh       cube{};
 		BufferDesc cubeBufferDesc{};
-		cubeBufferDesc.m_Name = "CubeMapMesh Buffer";
-		cubeBufferDesc.m_Usage = BufferUsage::Vertex | BufferUsage::TransferDst;
-		cubeBufferDesc.m_MemoryAccess = MemoryAccess::CPU_GPU;
+		cubeBufferDesc.m_DebugName = "CubeMapMesh Buffer";
+		cubeBufferDesc.m_Usage = BufferUsageFlags::Vertex | BufferUsageFlags::TransferDst;
+		cubeBufferDesc.m_MemoryAccess = MemoryAccess::CPU_GPU_Coherent;
 		cubeBufferDesc.m_SizeInBytes = sizeof(CubeMapMesh);
 		cubeBufferDesc.m_StrideInBytes = sizeof(cube.m_Verts[0]) * 3;
-		m_CubeMapMesh = m_Device.CreateBuffer_DEPR(cubeBufferDesc, &cube.m_Verts, sizeof(cube.m_Verts));
+		m_CubeMapMesh = m_Device.CreateBuffer(cubeBufferDesc);
 	}
 
 	void GlobalRenderAssets::Shutdown(RenderDevice& device) {

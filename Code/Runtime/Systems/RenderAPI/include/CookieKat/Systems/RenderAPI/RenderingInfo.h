@@ -5,26 +5,29 @@
 #include "CookieKat/Core/Containers/Containers.h"
 
 namespace CKE {
-	enum class StoreOp
+	// Rendering Attachment Store Operation
+	enum class StoreOp : u8
 	{
 		Store,
 		DontCare,
 		None
 	};
 
-	enum class LoadOp
+	// Rendering Attachment Load Operation
+	enum class LoadOp : u8
 	{
 		Load,
 		Clear,
 		DontCare
 	};
 
+	// Single Rendering Attachment Info
 	struct RenderingAttachment
 	{
-		TextureViewHandle m_TextureView{};
-		TextureLayout     m_Layout{};
-		LoadOp            m_LoadOp{};
-		StoreOp           m_StoreOp{};
+		TextureViewHandle m_TextureView = TextureViewHandle::Invalid();
+		TextureLayout     m_Layout = TextureLayout::Undefined;
+		LoadOp            m_LoadOp = LoadOp::DontCare;
+		StoreOp           m_StoreOp = StoreOp::DontCare;
 		Vec4              m_ClearValue{0.0f, 0.0f, 0.0f, 0.0f};
 	};
 
@@ -33,8 +36,8 @@ namespace CKE {
 		UInt2                       m_RenderArea = UInt2{0.0f, 0.0f};
 		Vector<RenderingAttachment> m_ColorAttachments{};
 		bool                        m_UseDepthAttachment = false;
-		RenderingAttachment         m_DepthAttachment;
+		RenderingAttachment         m_DepthAttachment{};
 		bool                        m_UseStencilAttachment = false;
-		RenderingAttachment         m_StencilAttachment;
+		RenderingAttachment         m_StencilAttachment{};
 	};
 }

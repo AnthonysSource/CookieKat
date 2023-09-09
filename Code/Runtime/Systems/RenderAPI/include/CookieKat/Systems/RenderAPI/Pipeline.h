@@ -8,8 +8,7 @@
 namespace CKE {
 	enum class AccessMask : u32
 	{
-		// The flag values must be in sync with
-		// Vulkan flag values
+		// The flag values must be in sync with Vulkan flag values
 		None = 0,
 		Shader_Read = (1 << 5),
 		Shader_Write = (1 << 6),
@@ -33,8 +32,7 @@ namespace CKE {
 
 	enum class PipelineStage : u32
 	{
-		// The flag values must be in sync with
-		// Vulkan flag values
+		// The flag values must be in sync with Vulkan flag values
 		TopOfPipe = (1 << 0),
 		DrawIndirect = (1 << 1),
 		VertexInput = (1 << 2),
@@ -136,6 +134,18 @@ namespace CKE {
 		Compute = 1 << 5,
 	};
 
+	constexpr inline ShaderStageMask operator&(ShaderStageMask a, ShaderStageMask b) {
+		return static_cast<ShaderStageMask>(static_cast<std::underlying_type<ShaderStageMask>::type>(a) &
+			static_cast<
+			std::underlying_type<ShaderStageMask>::type>(b));
+	}
+
+	constexpr inline ShaderStageMask operator|(ShaderStageMask a, ShaderStageMask b) {
+		return static_cast<ShaderStageMask>(static_cast<std::underlying_type<ShaderStageMask>::type>(a) |
+			static_cast<
+			std::underlying_type<ShaderStageMask>::type>(b));
+	}
+
 	enum class ShaderBindingType
 	{
 		UniformBuffer,
@@ -145,11 +155,13 @@ namespace CKE {
 
 	struct ShaderBinding
 	{
-		u64               m_SetIndex;
-		u32               m_BindingPoint;
-		ShaderBindingType m_Type;
-		u32               m_Count;
-		ShaderStageMask   m_StageMask;
+		u64               m_SetIndex = 0;
+		u32               m_BindingPoint = 0;
+		ShaderBindingType m_Type = ShaderBindingType::UniformBuffer;
+		u32               m_Count = 1;
+		ShaderStageMask   m_StageMask = ShaderStageMask::Fragment | ShaderStageMask::Vertex;
+		SamplerHandle*    m_ImmutableSamplers = nullptr;
+		u32               m_ImmutableSamplersCount = 0;
 	};
 
 	// Vertex Input

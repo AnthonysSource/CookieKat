@@ -21,7 +21,7 @@ namespace CKE {
 		RenderDevice device{};
 		glfwSetWindowUserPointer(pWindow, &device);
 
-		device.PassRenderTargetData(glfwGetWin32Window(pWindow));
+		device.SetRenderTargetData(glfwGetWin32Window(pWindow));
 		device.Initialize({s_WindowConfig.m_Width, s_WindowConfig.m_Height});
 		pTestDef->Setup(&device);
 

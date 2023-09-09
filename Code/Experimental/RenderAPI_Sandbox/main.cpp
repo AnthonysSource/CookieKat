@@ -6,8 +6,8 @@
 using namespace CKE;
 
 int main() {
-	FrameGraph_ComputeVertex triangleTest{};
-	RenderSandboxEnv           renderEnv{};
+	TriangleTest     triangleTest{};
+	RenderSandboxEnv renderEnv{};
 	renderEnv.Run(&triangleTest);
 	return 0;
 }

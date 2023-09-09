@@ -19,7 +19,7 @@ namespace CKE {
 		void Initialize(RenderPassInitCtx* pRenderCtx, ResourceSystem* pResources,
 		                TextureViewHandle          skyboxView);
 		void Setup(FrameGraphSetupContext& setup) override;
-		void Execute(ExecuteResourcesCtx& ctx, GraphicsCommandList& cmdList, RenderDevice& rd) override;
+		void Execute(ExecuteResourcesCtx& ctx, CommandList& cmdList, RenderDevice& rd) override;
 
 	private:
 		PipelineHandle        m_Pipeline;

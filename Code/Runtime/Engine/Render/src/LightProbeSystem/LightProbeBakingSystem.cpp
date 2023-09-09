@@ -23,15 +23,15 @@ namespace CKE {
 		m_pRenderScene = pSceneData;
 
 		BufferDesc bufferDesc{};
-		bufferDesc.m_Name = "CubeMap ReadBack Buffer";
-		bufferDesc.m_Usage = BufferUsage::TransferDst | BufferUsage::TransferSrc;
-		bufferDesc.m_MemoryAccess = MemoryAccess::CPU_GPU;
-		bufferDesc.m_UpdateFrequency = UpdateFrequency::Static;
+		bufferDesc.m_DebugName = "CubeMap ReadBack Buffer";
+		bufferDesc.m_Usage = BufferUsageFlags::TransferDst | BufferUsageFlags::TransferSrc;
+		bufferDesc.m_MemoryAccess = MemoryAccess::CPU_GPU_Coherent;
+		bufferDesc.m_DuplicationStrategy = DuplicationStrategy::Unique;
 		bufferDesc.m_SizeInBytes = sizeof(float) * 4 * 64 * 64;
 		m_ReadBackBuffer = m_pDevice->CreateBuffer(bufferDesc);
 
 		TextureDesc textureDesc{};
-		textureDesc.m_Name = "LightProbe";
+		textureDesc.m_DebugName = "LightProbe";
 		textureDesc.m_Format = TextureFormat::R32G32B32A32_SFLOAT;
 		textureDesc.m_Size = UInt3{64, 64, 1};
 		textureDesc.m_AspectMask = TextureAspectMask::Color;
@@ -39,7 +39,7 @@ namespace CKE {
 		textureDesc.m_ArraySize = 6;
 		textureDesc.m_Usage = TextureUsage::Color_Attachment | TextureUsage::Transfer_Dst | TextureUsage::Transfer_Src;
 		m_CubeMapTex = pDevice->CreateTexture(textureDesc);
-		GraphicsCommandList c = pDevice->GetGraphicsCmdList();
+		CommandList c = pDevice->GetGraphicsCmdList();
 		c.Begin();
 		c.Barrier(TextureBarrierDescription{
 			PipelineStage::AllCommands,
@@ -50,7 +50,7 @@ namespace CKE {
 			TextureLayout::Transfer_Dst,
 			m_CubeMapTex,
 			TextureAspectMask::Color,
-			TextureRange{
+			TextureSubresourceLayers{
 				TextureAspectMask::Color,
 				0, 1,
 				0, 6
@@ -120,7 +120,7 @@ namespace CKE {
 			m_pDevice->WaitForDevice();
 
 			{
-				GraphicsCommandList c = m_pDevice->GetGraphicsCmdList();
+				CommandList c = m_pDevice->GetGraphicsCmdList();
 				c.Begin();
 				c.Barrier(TextureBarrierDescription{
 					PipelineStage::AllCommands,
@@ -131,7 +131,7 @@ namespace CKE {
 					TextureLayout::Transfer_Src,
 					m_CubeMapTex,
 					TextureAspectMask::Color,
-					TextureRange{
+					TextureSubresourceLayers{
 						TextureAspectMask::Color,
 						0, 1,
 						0, 6
@@ -159,7 +159,7 @@ namespace CKE {
 			}
 
 			{
-				GraphicsCommandList c = m_pDevice->GetGraphicsCmdList();
+				CommandList c = m_pDevice->GetGraphicsCmdList();
 				c.Begin();
 				c.Barrier(TextureBarrierDescription{
 					PipelineStage::AllCommands,
@@ -170,7 +170,7 @@ namespace CKE {
 					TextureLayout::Transfer_Dst,
 					m_CubeMapTex,
 					TextureAspectMask::Color,
-					TextureRange{
+					TextureSubresourceLayers{
 						TextureAspectMask::Color,
 						0, 1,
 						0, 6
@@ -181,7 +181,7 @@ namespace CKE {
 				m_pDevice->WaitForDevice();
 			}
 
-			void* p = m_pDevice->GetBufferMappedPtr_DEPR(m_ReadBackBuffer);
+			void* p = m_pDevice->GetBufferMappedPtr(m_ReadBackBuffer);
 
 			String name{"Face_"};
 			name = name.append(std::to_string(i));

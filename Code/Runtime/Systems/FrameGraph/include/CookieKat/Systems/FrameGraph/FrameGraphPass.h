@@ -8,7 +8,7 @@ namespace CKE {
 	// Forward Declarations
 	class ComputeCommandList;
 	class TransferCommandList;
-	class GraphicsCommandList;
+	class CommandList;
 	class FrameGraph;
 	class RenderDevice;
 	class ExecuteResourcesCtx;
@@ -37,7 +37,7 @@ namespace CKE {
 		FGGraphicsRenderPass() : FGRenderPass() {};
 		FGGraphicsRenderPass(FGRenderPassID id) : FGRenderPass(id) { }
 
-		virtual void Execute(ExecuteResourcesCtx& ctx, GraphicsCommandList& cmdList, RenderDevice& rd) = 0;
+		virtual void Execute(ExecuteResourcesCtx& ctx, CommandList& cmdList, RenderDevice& rd) = 0;
 	};
 
 	class FGTransferRenderPass : public FGRenderPass

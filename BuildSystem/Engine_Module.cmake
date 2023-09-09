@@ -25,14 +25,20 @@ function(CK_Generic_Module
 	
 	project(${TARGET})
 
+	# We are transitioning to Private/Public folders for cpp/h files but we maintain
+	# compatibility with the previous src/include folder structure
 	file(GLOB_RECURSE SRC_FILES
 		"src/*.cpp"
 		"src/*.h"
+		"Private/*.cpp"
+		"Private/*.h"
 	)
 
 	file(GLOB_RECURSE HDR_FILES
 		"include/*.h"
 		"include/*.cpp"
+		"Public/*.h"
+		"Public/*.cpp"
 	)
 
 	file(GLOB_RECURSE TEST_FILES
@@ -53,8 +59,10 @@ function(CK_Generic_Module
 	target_include_directories(${TARGET}
 	PUBLIC
 		"${CMAKE_CURRENT_SOURCE_DIR}/include/"
+		"${CMAKE_CURRENT_SOURCE_DIR}/Public/"
 	PRIVATE
-		"${CMAKE_CURRENT_SOURCE_DIR}/${HEADER_BASE_DIR}"
+		"${CMAKE_CURRENT_SOURCE_DIR}/include/${HEADER_BASE_DIR}"
+		"${CMAKE_CURRENT_SOURCE_DIR}/Public/${HEADER_BASE_DIR}"
 	)
 	
 	target_link_libraries(${TARGET}
@@ -90,8 +98,17 @@ function(CK_Generic_Module
 	# ------------------------------------------------------------------------------
 
 	source_group("00_BuildSystem" FILES "CMakeLists.txt")
-	source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/${HEADER_BASE_DIR}" PREFIX "Public" FILES ${HDR_FILES})
-	source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/src/" PREFIX "Private" FILES ${SRC_FILES})
+	
+	list(GET HDR_FILES 0 folderStructureCheck)
+	string(FIND "${folderStructureCheck}" "include" substringIndex)
+	if(substringIndex GREATER_EQUAL 0)
+		source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/include/${HEADER_BASE_DIR}" PREFIX "Public" FILES ${HDR_FILES})
+		source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/src/" PREFIX "Private" FILES ${SRC_FILES})
+	else()
+		source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/Public/${HEADER_BASE_DIR}" PREFIX "Public" FILES ${HDR_FILES})
+		source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/Private/" PREFIX "Private" FILES ${SRC_FILES})
+	endif()
+
 	source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/tests/" PREFIX "Tests" FILES ${TEST_FILES})
 	
 	# Install
@@ -116,7 +133,7 @@ function(CK_Core_Module
 		"CookieKat_Runtime_Core_${SHORT_NAME}"
 		${SHORT_NAME}
 		CookieKat/01_Core
-		"include/CookieKat/Core/${SHORT_NAME}/"
+		"CookieKat/Core/${SHORT_NAME}/"
 		"${PUBLIC_LIB_DEPS}")
 
 endfunction()
@@ -129,7 +146,7 @@ function(CK_Systems_Module
 		"CookieKat_Runtime_Systems_${SHORT_NAME}"
 		${SHORT_NAME}
 		CookieKat/02_Systems
-		"include/CookieKat/Systems/${SHORT_NAME}/"
+		"CookieKat/Systems/${SHORT_NAME}/"
 		"${PUBLIC_LIB_DEPS}")
 
 endfunction()
@@ -142,7 +159,7 @@ function(CK_Engine_Module
 		"CookieKat_Runtime_Engine_${SHORT_NAME}"
 		${SHORT_NAME}
 		CookieKat/03_Engine
-		"include/CookieKat/Engine/${SHORT_NAME}/"
+		"CookieKat/Engine/${SHORT_NAME}/"
 		"${PUBLIC_LIB_DEPS}")
 
 endfunction()

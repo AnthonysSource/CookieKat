@@ -46,7 +46,7 @@ namespace CKE {
 				setup.UseBuffer("Vertex");
 			}
 
-			void Execute(ExecuteResourcesCtx& ctx, GraphicsCommandList& cmdList, RenderDevice& rd) override {
+			void Execute(ExecuteResourcesCtx& ctx, CommandList& cmdList, RenderDevice& rd) override {
 				BufferHandle              vertex = ctx.GetBuffer("Vertex");
 				TextureBarrierDescription barrierDesc{};
 				barrierDesc.m_Texture = rd.GetBackBuffer();
@@ -72,7 +72,7 @@ namespace CKE {
 				});
 
 				cmdList.SetDefaultViewportScissor(rd.GetBackBufferSize());
-				cmdList.SetPipeline(m_GraphicsPipeline);
+				cmdList.SetGraphicsPipeline(m_GraphicsPipeline);
 				cmdList.SetVertexBuffer(vertex);
 				cmdList.Draw(3, 1, 0, 0);
 
@@ -102,14 +102,13 @@ namespace CKE {
 	public:
 		void Setup(RenderDevice* pDevice) override {
 			BufferDesc bufferDesc{};
-			bufferDesc.m_Name = "Triangle Buffer";
+			bufferDesc.m_DebugName = "Triangle Buffer";
 			bufferDesc.m_MemoryAccess = MemoryAccess::GPU;
 			bufferDesc.m_SizeInBytes = sizeof(CommonShapes::m_TriangleVerts);
 			bufferDesc.m_StrideInBytes = sizeof(TriangleVert);
-			bufferDesc.m_Usage = BufferUsage::Vertex | BufferUsage::Storage | BufferUsage::TransferDst;
-			bufferDesc.m_UpdateFrequency = UpdateFrequency::Static;
-			m_TriangleBuffer = pDevice->CreateBuffer_DEPR(bufferDesc, CommonShapes::m_TriangleVerts.data(),
-			                                              sizeof(CommonShapes::m_TriangleVerts));
+			bufferDesc.m_Usage = BufferUsageFlags::Vertex | BufferUsageFlags::Storage | BufferUsageFlags::TransferDst;
+			bufferDesc.m_DuplicationStrategy = DuplicationStrategy::Unique;
+			m_TriangleBuffer = pDevice->CreateBuffer(bufferDesc);
 
 			PipelineLayoutDesc compLayoutDesc{};
 			compLayoutDesc.SetShaderBindings({

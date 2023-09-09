@@ -3,7 +3,6 @@
 #include "CookieKat/Core/Platform/Asserts.h"
 #include "CookieKat/Core/Platform/PrimitiveTypes.h"
 #include "CookieKat/Core/Containers/Containers.h"
-#include "CookieKat/Core/Memory/Memory.h"
 
 namespace CKE {
 	// Handles the provided block of memory using a linear allocation scheme
@@ -22,16 +21,27 @@ namespace CKE {
 
 		//-----------------------------------------------------------------------------
 
+		// Allocates a block of memory of the supplied size in bytes.
+		//
+		// Asserts (If Enabled):
+		//		Allocation doesn't overflow the size of the buffer
 		[[nodiscard]] inline void* Alloc(u64 sizeInBytes);
 
 		// Allocates a block of memory the size of T
-		// (Doesn't call any constructor)
+		// NOTE: Doesn't call any constructor
 		template <typename T>
 		[[nodiscard]] inline T* Alloc();
 
+		// Clears and resets all of the allocations made
+		void Reset();
+
 		//-----------------------------------------------------------------------------
 
-		void Reset();
+		// Returns the total size of the memory block
+		u64 GetTotalSizeInBytes() const { return m_SizeInBytes; }
+
+		// Returns the allocated size inside the memory block
+		u64 GetAllocatedSizeInBytes() const { return m_OffsetInBytes; }
 
 	private:
 		u8* m_pBuffer;       // Ptr to the memory block managed by the allocator
@@ -39,6 +49,11 @@ namespace CKE {
 		u64 m_OffsetInBytes; // Current offset
 	};
 }
+
+
+//=======================================================================
+//						Inline Definitions
+//=======================================================================
 
 
 namespace CKE {

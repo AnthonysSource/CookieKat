@@ -14,35 +14,35 @@ namespace CKE {
 		m_Scene.m_ObjectData.resize(RenderSettings::MAX_OBJECTS);
 
 		BufferDesc objectDataBufferDesc{};
-		objectDataBufferDesc.m_Name = "Object Data Buffer";
-		objectDataBufferDesc.m_Usage = BufferUsage::Storage | BufferUsage::TransferDst;
-		objectDataBufferDesc.m_MemoryAccess = MemoryAccess::CPU_GPU;
-		objectDataBufferDesc.m_UpdateFrequency = UpdateFrequency::PerFrame;
+		objectDataBufferDesc.m_DebugName = "Object Data Buffer";
+		objectDataBufferDesc.m_Usage = BufferUsageFlags::Storage | BufferUsageFlags::TransferDst;
+		objectDataBufferDesc.m_MemoryAccess = MemoryAccess::CPU_GPU_Coherent;
+		objectDataBufferDesc.m_DuplicationStrategy = DuplicationStrategy::PerFrameInFlight;
 		objectDataBufferDesc.m_SizeInBytes = sizeof(ObjectDataGPU) * RenderSettings::MAX_OBJECTS;
 		objectDataBufferDesc.m_StrideInBytes = sizeof(ObjectDataGPU);
 		m_ObjectDataBuffer = pDevice->CreateBuffer(objectDataBufferDesc);
 
 		BufferDesc viewDataBufferDesc{};
-		viewDataBufferDesc.m_Name = "View Buffer";
-		viewDataBufferDesc.m_Usage = BufferUsage::Uniform | BufferUsage::TransferDst;
-		viewDataBufferDesc.m_MemoryAccess = MemoryAccess::CPU_GPU;
-		viewDataBufferDesc.m_UpdateFrequency = UpdateFrequency::PerFrame;
+		viewDataBufferDesc.m_DebugName = "View Buffer";
+		viewDataBufferDesc.m_Usage = BufferUsageFlags::Uniform | BufferUsageFlags::TransferDst;
+		viewDataBufferDesc.m_MemoryAccess = MemoryAccess::CPU_GPU_Coherent;
+		viewDataBufferDesc.m_DuplicationStrategy = DuplicationStrategy::PerFrameInFlight;
 		viewDataBufferDesc.m_SizeInBytes = sizeof(ViewDataGPU);
 		m_ViewBuffer = pDevice->CreateBuffer(viewDataBufferDesc);
 
 		BufferDesc lightDataBufferDesc{};
-		lightDataBufferDesc.m_Name = "Light Data Buffer";
-		lightDataBufferDesc.m_Usage = BufferUsage::Uniform | BufferUsage::TransferDst;
-		lightDataBufferDesc.m_MemoryAccess = MemoryAccess::CPU_GPU;
-		lightDataBufferDesc.m_UpdateFrequency = UpdateFrequency::PerFrame;
+		lightDataBufferDesc.m_DebugName = "Light Data Buffer";
+		lightDataBufferDesc.m_Usage = BufferUsageFlags::Uniform | BufferUsageFlags::TransferDst;
+		lightDataBufferDesc.m_MemoryAccess = MemoryAccess::CPU_GPU_Coherent;
+		lightDataBufferDesc.m_DuplicationStrategy = DuplicationStrategy::PerFrameInFlight;
 		lightDataBufferDesc.m_SizeInBytes = sizeof(LightsDataGPU);
 		m_LightsBuffer = pDevice->CreateBuffer(lightDataBufferDesc);
 
 		BufferDesc enviorementBufferDesc{};
-		enviorementBufferDesc.m_Name = "Enviorement Buffer";
-		enviorementBufferDesc.m_Usage = BufferUsage::Uniform | BufferUsage::TransferDst;
-		enviorementBufferDesc.m_MemoryAccess = MemoryAccess::CPU_GPU;
-		enviorementBufferDesc.m_UpdateFrequency = UpdateFrequency::PerFrame;
+		enviorementBufferDesc.m_DebugName = "Enviorement Buffer";
+		enviorementBufferDesc.m_Usage = BufferUsageFlags::Uniform | BufferUsageFlags::TransferDst;
+		enviorementBufferDesc.m_MemoryAccess = MemoryAccess::CPU_GPU_Coherent;
+		enviorementBufferDesc.m_DuplicationStrategy = DuplicationStrategy::PerFrameInFlight;
 		enviorementBufferDesc.m_SizeInBytes = sizeof(EnvironmentGPU);
 		m_EnviorementBuffer = m_pDevice->CreateBuffer(enviorementBufferDesc);
 	}

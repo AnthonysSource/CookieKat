@@ -25,8 +25,8 @@ namespace CKE {
 			switch (usageMeta.m_Type) {
 			case FGResourceType::Texture: {
 				FGTextureData* pTex = pDb->GetTexture(usageMeta.m_ID);
-				CKE_ASSERT(pTex->m_TexHandle.IsNotNull());
-				CKE_ASSERT(pTex->m_ViewHandle.IsNotNull());
+				CKE_ASSERT(pTex->m_TexHandle.IsValid());
+				CKE_ASSERT(pTex->m_ViewHandle.IsValid());
 				m_Textures[usageMeta.m_ID] = pTex->m_TexHandle;
 				m_TextureViews[usageMeta.m_ID] = pTex->m_ViewHandle;
 			}
@@ -47,8 +47,8 @@ namespace CKE {
 			switch (usageMeta.m_Type) {
 			case FGResourceType::Texture: {
 				FGTextureData* pTex = pDb->GetTexture(usageMeta.m_ID);
-				CKE_ASSERT(pTex->m_TexHandle.IsNotNull());
-				CKE_ASSERT(pTex->m_ViewHandle.IsNotNull());
+				CKE_ASSERT(pTex->m_TexHandle.IsValid());
+				CKE_ASSERT(pTex->m_ViewHandle.IsValid());
 				m_Textures.insert({usageMeta.m_ID, pTex->m_TexHandle});
 				m_TextureViews.insert({usageMeta.m_ID, pTex->m_ViewHandle});
 			}

@@ -1,0 +1,5 @@
+CK_Core_Module(
+	Debugging
+	CookieKat_Runtime_Core_Platform
+	CookieKat_Runtime_Core_Logging
+)

@@ -40,7 +40,7 @@ namespace CKE {
 		setup.UseTexture(LightingPass::HDRSceneColor, FGPipelineAccessInfo::FragmentShaderRead());
 
 		TextureDesc bloomTexDesc{};
-		bloomTexDesc.m_Name = "Bloom PreFilter";
+		bloomTexDesc.m_DebugName = "Bloom PreFilter";
 		bloomTexDesc.m_Format = TextureFormat::R16G16B16A16_SFLOAT;
 		bloomTexDesc.m_AspectMask = TextureAspectMask::Color;
 		bloomTexDesc.m_TextureType = TextureType::Tex2D;
@@ -49,7 +49,7 @@ namespace CKE {
 		setup.UseTexture(BloomModule::BloomPreFilter, FGPipelineAccessInfo::ColorAttachmentWrite());
 	}
 
-	void BloomPreFilterPass::Execute(ExecuteResourcesCtx& ctx, GraphicsCommandList& cmdList,
+	void BloomPreFilterPass::Execute(ExecuteResourcesCtx& ctx, CommandList& cmdList,
 	                                 RenderDevice&         rd) {
 		TextureViewHandle sceneColorTex = ctx.GetTextureView(LightingPass::HDRSceneColor);
 		TextureViewHandle bloomPreFilterTex = ctx.GetTextureView(BloomModule::BloomPreFilter);
@@ -70,7 +70,7 @@ namespace CKE {
 			.m_UseDepthAttachment = false,
 		});
 
-		cmdList.SetPipeline(m_PrePassPipeline);
+		cmdList.SetGraphicsPipeline(m_PrePassPipeline);
 
 		// Set Pipeline Dynamic State
 		cmdList.SetDefaultViewportScissor(rd.GetBackBufferSize());
@@ -134,7 +134,7 @@ namespace CKE {
 		f32 relSize = std::pow(2.0f, m_Stage);
 
 		TextureDesc outputTexDesc{};
-		outputTexDesc.m_Name = "Bloom DownSample";
+		outputTexDesc.m_DebugName = "Bloom DownSample";
 		outputTexDesc.m_Format = TextureFormat::R16G16B16A16_SFLOAT;
 		outputTexDesc.m_AspectMask = TextureAspectMask::Color;
 		outputTexDesc.m_TextureType = TextureType::Tex2D;
@@ -145,7 +145,7 @@ namespace CKE {
 		setup.UseTexture(m_Output, FGPipelineAccessInfo::ColorAttachmentWrite());
 	}
 
-	void BloomDownSamplePass::Execute(ExecuteResourcesCtx& ctx, GraphicsCommandList& cmdList,
+	void BloomDownSamplePass::Execute(ExecuteResourcesCtx& ctx, CommandList& cmdList,
 	                                  RenderDevice&         rd) {
 		TextureViewHandle inputTex = ctx.GetTextureView(m_Input);
 		TextureViewHandle outputTex = ctx.GetTextureView(m_Output);
@@ -167,7 +167,7 @@ namespace CKE {
 			.m_UseDepthAttachment = false,
 		});
 
-		cmdList.SetPipeline(m_BloomDownPipeline);
+		cmdList.SetGraphicsPipeline(m_BloomDownPipeline);
 		cmdList.SetDefaultViewportScissor(currentSize);
 
 		// Shader Bindings
@@ -233,7 +233,7 @@ namespace CKE {
 		f32 relSize = std::pow(2.0f, m_Stage);
 
 		TextureDesc outputTexDesc{};
-		outputTexDesc.m_Name = "Bloom UpSample";
+		outputTexDesc.m_DebugName = "Bloom UpSample";
 		outputTexDesc.m_Format = TextureFormat::R16G16B16A16_SFLOAT;
 		outputTexDesc.m_AspectMask = TextureAspectMask::Color;
 		outputTexDesc.m_TextureType = TextureType::Tex2D;
@@ -243,7 +243,7 @@ namespace CKE {
 		setup.UseTexture(m_Output, FGPipelineAccessInfo::ColorAttachmentWrite());
 	}
 
-	void BloomUpSamplePass::Execute(ExecuteResourcesCtx& ctx, GraphicsCommandList& cmdList,
+	void BloomUpSamplePass::Execute(ExecuteResourcesCtx& ctx, CommandList& cmdList,
 	                                RenderDevice&         rd) {
 		TextureViewHandle input = ctx.GetTextureView(m_Input);
 		TextureViewHandle output = ctx.GetTextureView(m_Output);
@@ -265,7 +265,7 @@ namespace CKE {
 			.m_UseDepthAttachment = false,
 		});
 
-		cmdList.SetPipeline(m_Pipeline);
+		cmdList.SetGraphicsPipeline(m_Pipeline);
 		cmdList.SetDefaultViewportScissor(currentSize);
 
 		// Shader Bindings
@@ -324,7 +324,7 @@ namespace CKE {
 		setup.UseTexture(LightingPass::HDRSceneColor, FGPipelineAccessInfo::ColorAttachmentWrite());
 	}
 
-	void BloomCombinePass::Execute(ExecuteResourcesCtx& ctx, GraphicsCommandList& cmdList,
+	void BloomCombinePass::Execute(ExecuteResourcesCtx& ctx, CommandList& cmdList,
 	                               RenderDevice&         rd) {
 		TextureViewHandle base = ctx.GetTextureView(BloomModule::BloomPreFilter);
 		TextureViewHandle bloom = ctx.GetTextureView(BloomModule::BloomUp_0);
@@ -345,7 +345,7 @@ namespace CKE {
 			.m_UseDepthAttachment = false,
 		});
 
-		cmdList.SetPipeline(m_Pipeline);
+		cmdList.SetGraphicsPipeline(m_Pipeline);
 		cmdList.SetDefaultViewportScissor(currentSize);
 
 		// Shader Bindings

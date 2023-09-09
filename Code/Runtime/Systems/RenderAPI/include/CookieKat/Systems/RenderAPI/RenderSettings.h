@@ -1,7 +1,7 @@
 #pragma once
 
 namespace CKE {
-	// Some global rendering settings
+	// Global compile-time rendering settings
 	struct RenderSettings
 	{
 		static constexpr u32  MAX_FRAMES_IN_FLIGHT = 2;

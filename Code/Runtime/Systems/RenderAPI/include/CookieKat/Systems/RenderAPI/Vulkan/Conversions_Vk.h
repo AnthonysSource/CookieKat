@@ -8,14 +8,14 @@
 #include <vulkan/vulkan_core.h>
 
 namespace CKE {
-	class ConversionsVK
+	class ConversionsVk
 	{
 	public:
 		static VkShaderStageFlags GetVkShaderStageFlags(ShaderStageMask shaderStage) {
 			return (VkShaderStageFlags)shaderStage;
-		};
+		}
 
-		static VkBufferUsageFlags GetVkBufferUsageFlags(BufferUsage bufferUsage) {
+		static VkBufferUsageFlags GetVkBufferUsageFlags(BufferUsageFlags bufferUsage) {
 			return static_cast<VkBufferUsageFlags>(bufferUsage);
 		}
 
@@ -24,7 +24,7 @@ namespace CKE {
 			switch (memoryAccess) {
 			case MemoryAccess::GPU: vkFlags = vkFlags | VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 				break;
-			case MemoryAccess::CPU_GPU:
+			case MemoryAccess::CPU_GPU_Coherent:
 				vkFlags = vkFlags | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
 				break;
 			default: CKE_UNREACHABLE_CODE();
@@ -188,11 +188,16 @@ namespace CKE {
 			case TextureFormat::R8G8B8A8_UNORM: return VK_FORMAT_R8G8B8A8_UNORM;
 			case TextureFormat::R8G8B8A8_USCALED: return VK_FORMAT_R8G8B8A8_USCALED;
 			case TextureFormat::R8G8B8A8_SSCALED: return VK_FORMAT_R8G8B8A8_SSCALED;
+
+			case TextureFormat::D24_UNORM_S8_UINT: return VK_FORMAT_D24_UNORM_S8_UINT;
+			case TextureFormat::D32_SFLOAT_S8_UINT: return VK_FORMAT_D32_SFLOAT_S8_UINT;
+
 			case TextureFormat::R16G16B16A16_SFLOAT: return VK_FORMAT_R16G16B16A16_SFLOAT;
 			case TextureFormat::R32G32B32A32_SFLOAT: return VK_FORMAT_R32G32B32A32_SFLOAT;
-			case TextureFormat::D24_UNORM_S8_UINT: return VK_FORMAT_D24_UNORM_S8_UINT;
-			case TextureFormat::B8G8R8A8_SRGB: return VK_FORMAT_B8G8R8A8_SRGB;
+
 			case TextureFormat::R32_UINT: return VK_FORMAT_R32_UINT;
+
+			case TextureFormat::B8G8R8A8_SRGB: return VK_FORMAT_B8G8R8A8_SRGB;
 			default: CKE_UNREACHABLE_CODE();
 			}
 			return (VkFormat)0;
@@ -253,6 +258,26 @@ namespace CKE {
 			default: CKE_UNREACHABLE_CODE();
 			}
 			return (VkAttachmentStoreOp)0;
+		}
+
+		static VkIndexType GetVkIndexFormat(IndicesFormat indicesFormat) {
+			switch (indicesFormat) {
+			case IndicesFormat::UINT16: return VK_INDEX_TYPE_UINT16;
+			case IndicesFormat::UINT32: return VK_INDEX_TYPE_UINT32;
+			default: CKE_UNREACHABLE_CODE();
+			}
+			return (VkIndexType)0;
+		}
+
+		static VkPipelineBindPoint GetVkPipelineBindPoint(PipelineBindPoint bindPoint) {
+			switch (bindPoint) {
+			case PipelineBindPoint::Graphics: return VK_PIPELINE_BIND_POINT_GRAPHICS;
+			case PipelineBindPoint::Compute: return VK_PIPELINE_BIND_POINT_COMPUTE;
+			case PipelineBindPoint::RayTracing: return VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR;
+			default: 
+				CKE_UNREACHABLE_CODE();
+			}
+			return (VkPipelineBindPoint)0;
 		}
 	};
 }

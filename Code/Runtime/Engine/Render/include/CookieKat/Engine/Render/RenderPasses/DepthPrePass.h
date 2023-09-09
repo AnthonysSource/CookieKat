@@ -17,7 +17,7 @@ namespace CKE {
 
 		void Initialize(RenderPassInitCtx* pInitCtx);
 		void Setup(FrameGraphSetupContext& setup) override;
-		void Execute(ExecuteResourcesCtx& ctx, GraphicsCommandList& cmdList, RenderDevice& rd) override;
+		void Execute(ExecuteResourcesCtx& ctx, CommandList& cmdList, RenderDevice& rd) override;
 
 	private:
 		EntityDatabase*          m_pEntityDb = nullptr;

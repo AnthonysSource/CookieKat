@@ -34,22 +34,22 @@ namespace CKE {
 		TextureExtraSettings ext{true, {1.0f, 1.0f}};
 
 		texDesc.m_Format = TextureFormat::R16G16B16A16_SFLOAT;
-		texDesc.m_Name = "GBuffer Albedo";
+		texDesc.m_DebugName = "GBuffer Albedo";
 		setup.CreateTransientTexture(GBuffer::Albedo, texDesc, ext);
 		setup.UseTexture(GBuffer::Albedo, FGPipelineAccessInfo::ColorAttachmentWrite());
 
 		texDesc.m_Format = TextureFormat::R16G16B16A16_SFLOAT;
-		texDesc.m_Name = "GBuffer Normals";
+		texDesc.m_DebugName = "GBuffer Normals";
 		setup.CreateTransientTexture(GBuffer::Normals, texDesc, ext);
 		setup.UseTexture(GBuffer::Normals, FGPipelineAccessInfo::ColorAttachmentWrite());
 
 		texDesc.m_Format = TextureFormat::R32G32B32A32_SFLOAT;
-		texDesc.m_Name = "GBuffer Positions";
+		texDesc.m_DebugName = "GBuffer Positions";
 		setup.CreateTransientTexture(GBuffer::Position, texDesc, ext);
 		setup.UseTexture(GBuffer::Position, FGPipelineAccessInfo::ColorAttachmentWrite());
 
 		texDesc.m_Format = TextureFormat::R8G8B8A8_UNORM;
-		texDesc.m_Name = "GBuffer RoughMetalRefl";
+		texDesc.m_DebugName = "GBuffer RoughMetalRefl";
 		setup.CreateTransientTexture(GBuffer::RoughMetalRefl, texDesc, ext);
 		setup.UseTexture(GBuffer::RoughMetalRefl, FGPipelineAccessInfo::ColorAttachmentWrite());
 
@@ -57,12 +57,12 @@ namespace CKE {
 		//-----------------------------------------------------------------------------
 
 		texDesc.m_Format = TextureFormat::R16G16B16A16_SFLOAT;
-		texDesc.m_Name = "Object Idx";
+		texDesc.m_DebugName = "Object Idx";
 		setup.CreateTransientTexture(GBuffer::ObjectIdx, texDesc, ext);
 		setup.UseTexture(GBuffer::ObjectIdx, FGPipelineAccessInfo::ColorAttachmentWrite());
 	}
 
-	void GBufferPass::Execute(ExecuteResourcesCtx& ctx, GraphicsCommandList& cmdList, RenderDevice& rd) {
+	void GBufferPass::Execute(ExecuteResourcesCtx& ctx, CommandList& cmdList, RenderDevice& rd) {
 		TextureViewHandle depthBufferTex = ctx.GetTextureView(GBuffer::DepthStencil);
 		TextureViewHandle albedoTex = ctx.GetTextureView(GBuffer::Albedo);
 		TextureViewHandle normalsTex = ctx.GetTextureView(GBuffer::Normals);
@@ -112,7 +112,7 @@ namespace CKE {
 			},
 		});
 
-		cmdList.SetPipeline(m_Pipeline);
+		cmdList.SetGraphicsPipeline(m_Pipeline);
 		cmdList.SetDefaultViewportScissor(m_pRenderingSettings->m_Viewport.m_Extent);
 
 		// Global Descriptor

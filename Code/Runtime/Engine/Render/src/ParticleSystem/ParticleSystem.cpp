@@ -26,14 +26,14 @@ namespace CKE {
 
 		// Create and upload particles to GPU
 		BufferDesc bufferDesc{};
-		bufferDesc.m_Name = "Particle Buffer";
+		bufferDesc.m_DebugName = "Particle Buffer";
 		bufferDesc.m_MemoryAccess = MemoryAccess::GPU;
 		bufferDesc.m_SizeInBytes = sizeof(m_ParticlesInitialData);
 		bufferDesc.m_StrideInBytes = sizeof(m_ParticlesInitialData[0]);
-		bufferDesc.m_Usage = BufferUsage::Storage | BufferUsage::TransferDst;
-		bufferDesc.m_UpdateFrequency = UpdateFrequency::Static;
-		m_ParticlesCurrent = m_pDevice->CreateBuffer_DEPR(bufferDesc, m_ParticlesInitialData.data(), sizeof(m_ParticlesInitialData));
-		m_ParticlesLast = m_pDevice->CreateBuffer_DEPR(bufferDesc, m_ParticlesInitialData.data(), sizeof(m_ParticlesInitialData));
+		bufferDesc.m_Usage = BufferUsageFlags::Storage | BufferUsageFlags::TransferDst;
+		bufferDesc.m_DuplicationStrategy = DuplicationStrategy::Unique;
+		m_ParticlesCurrent = m_pDevice->CreateBuffer(bufferDesc);
+		m_ParticlesLast = m_pDevice->CreateBuffer(bufferDesc);
 
 		// Create compute pipeline
 		PipelineLayoutDesc layoutDesc{};
@@ -91,7 +91,7 @@ namespace CKE {
 		m_pDevice->WaitForDevice();
 
 		// Draw Particles
-		GraphicsCommandList gfxList = m_pDevice->GetGraphicsCmdList();
+		CommandList gfxList = m_pDevice->GetGraphicsCmdList();
 		gfxList.Begin();
 		gfxList.BeginDebugLabel("Particle Draw", Vec3{0.0f, 1.0f, 0.0f});
 
@@ -106,7 +106,7 @@ namespace CKE {
 		renderingInfo.m_ColorAttachments.push_back(colorAttach);
 		gfxList.BeginRendering(renderingInfo);
 
-		gfxList.SetPipeline(m_GfxPipeline);
+		gfxList.SetGraphicsPipeline(m_GfxPipeline);
 		gfxList.SetVertexBuffer(m_ParticlesCurrent);
 		gfxList.Draw(256, 1, 0, 0);
 

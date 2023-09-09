@@ -5,6 +5,7 @@
 #include "CookieKat/Systems/RenderAPI/RenderHandle.h"
 
 namespace CKE {
+	class RenderDevice;
 	class EntityDatabase;
 }
 

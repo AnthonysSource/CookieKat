@@ -2,6 +2,7 @@
 
 #include "CookieKat/Core/Containers/Containers.h"
 #include "CookieKat/Core/Platform/PrimitiveTypes.h"
+#include "CookieKat/Core/Logging/LoggingSystem.h"
 
 #include "CookieKat/Systems/RenderAPI/DescriptorSetBuilder.h"
 #include "CookieKat/Systems/RenderAPI/Buffer.h"
@@ -9,15 +10,31 @@
 #include "CookieKat/Systems/RenderAPI/Pipeline.h"
 #include "CookieKat/Systems/RenderAPI/Texture.h"
 
-#include "CookieKat/Systems/RenderAPI/Internal/RenderResourcesDB.h"
+#include "CookieKat/Systems/RenderAPI/Internal/RenderResourcesDatabase.h"
 #include "CookieKat/Systems/RenderAPI/Internal/Swapchain.h"
 #include "CookieKat/Systems/RenderAPI/Vulkan/Instance_Vk.h"
-#include "CookieKat/Systems/RenderAPI/Vulkan/FrameData_Vk.h"
+#include "CookieKat/Systems/RenderAPI/Vulkan/FrameData.h"
 
 #include <vulkan/vulkan_core.h>
 
+#include "vk_mem_alloc.h"
+
+//-----------------------------------------------------------------------------
+
+// Debugging utilities
+
+static void CheckCallVk(VkResult result, char const* filePath, CKE::i32 fileLine) {
+	using namespace CKE;
+	if (result != VK_SUCCESS) {
+		g_LoggingSystem.Log(LogLevel::Error, LogChannel::Rendering, "Error in vulkan function at path: {}, Line: {}", filePath, fileLine);
+	}
+}
+
+#define VK_CHECK_CALL(x) CheckCallVk(x, __FILE__, __LINE__)
+
+//-----------------------------------------------------------------------------
+
 namespace CKE {
-	// Primary interface with the GPU
 	class RenderDevice
 	{
 	public:
@@ -26,12 +43,17 @@ namespace CKE {
 
 		// Used to pass a pointer to the platform window (win32, not GLFW)
 		// WARNING: Must be called before calling Initialize()
-		void PassRenderTargetData(void* pData);
+		void SetRenderTargetData(void* pData);
 
 		// A RenderDevice must be initialized using RenderDevice::Initialize(...)
 		// and must be destroyed calling RenderDevice::Shutdown()
 		void Initialize(Int2 backBufferSize);
 		void Shutdown();
+
+		// Create the device SwapChain with the given size and the
+		// supported formats found in the device. The specific configuration
+		// of the SwapChain is inside this method
+		void CreateSwapChain(Int2 frameBufferSize, HWND window);
 
 		// Frame Sync
 		//-----------------------------------------------------------------------------
@@ -66,20 +88,14 @@ namespace CKE {
 		void DestroyBuffer(BufferHandle bufferHandle);
 
 		void* MapBuffer(BufferHandle bufferHandle);
+
 		void UnMapBuffer(BufferHandle bufferHandle);
 
-		// -- DEPRECATED --
 		// Returns a pointer to the mapped memory space of the given buffer
 		//
 		// Pre-Requisites:
-		//   The buffer must be permanently mapped
-		void* GetBufferMappedPtr_DEPR(BufferHandle bufferHandle);
-
-		// -- DEPRECATED --
-		BufferHandle CreateBuffer_DEPR(BufferDesc bufferDesc, void* pInitialData, u64 dataByteSize);
-
-		// -- DEPRECATED --
-		void UploadBufferData_DEPR(BufferHandle bufferHandle, void* pData, u64 dataByteSize, u32 offsetInBuffer);
+		//   The buffer must be mapped
+		void* GetBufferMappedPtr(BufferHandle bufferHandle);
 
 		// Textures and Samplers
 		//-----------------------------------------------------------------------------
@@ -162,59 +178,29 @@ namespace CKE {
 		// Reset the given fence so it can be signaled again
 		void ResetFence(FenceHandle fence);
 
-		// Commands
+		// Queues
+		//-----------------------------------------------------------------------------
+
+		CommandQueueHandle CreateCommandQueue(CommandQueueDesc desc);
+		void               SubmitCommandList(CommandList* cmdList, u32 cmdListCount, CmdListSubmitInfo submitInfo);
+
+		// Command Lists
 		//-----------------------------------------------------------------------------
 
 		// Returns an available graphics command list for this frame
 		//
 		// Asserts:
 		//   Requested cmdList count is lower than the max amount
-		GraphicsCommandList GetGraphicsCmdList();
-
-		// Returns an available transfer command list for this frame
-		//
-		// Asserts:
-		//   Requested cmdList count is lower than the max amount
-		TransferCommandList GetTransferCmdList();
-
-		// Returns an available compute command list for this frame
-		//
-		// Asserts:
-		//   Requested cmdList count is lower than the max amount
-		ComputeCommandList GetComputeCmdList();
+		CommandList GetGraphicsCmdList();
 
 		// Submit a command list to the graphics queue
-		void SubmitGraphicsCommandList(GraphicsCommandList& cmdList, CmdListSubmitInfo submitInfo);
-
-		// Submit a command list to the graphics queue
-		void SubmitTransferCommandList(TransferCommandList& cmdList, CmdListSubmitInfo submitInfo);
-
-		// Submit a command list to the graphics queue
-		void SubmitComputeCommandList(ComputeCommandList& cmdList, CmdListSubmitInfo submitInfo);
+		void SubmitGraphicsCommandList(CommandList& cmdList, CmdListSubmitInfo submitInfo);
 
 		// Submit a batch of command lists to the graphics queue
-		void SubmitGraphicsCommandLists(Vector<GraphicsCommandList>& cmdList, CmdListSubmitInfo submitInfo);
-
-		// Submit a batch of command lists to the transfer queue
-		void SubmitTransferCommandLists(Vector<TransferCommandList>& cmdList, CmdListSubmitInfo submitInfo);
-
-		// Submit a batch of command lists to the compute queue
-		void SubmitComputeCommandLists(Vector<ComputeCommandList>& cmdList, CmdListSubmitInfo submitInfo);
-
-		// -- DEPRECATED --
-		// Blocks the calling thread until the graphics queue is idle
-		void WaitGraphicsQueueIdle();
-
-		// -- DEPRECATED --
-		// Blocks the calling thread until the transfer queue is idle
-		void WaitTransferQueueIdle();
-
-		// -- DEPRECATED --
-		// Blocks the calling thread until the compute queue is idle
-		void WaitComputeQueueIdle();
+		void SubmitGraphicsCommandLists(Vector<CommandList>& cmdList, CmdListSubmitInfo submitInfo);
 
 		// Returns the indices of the selected GPU queues
-		QueueFamilyIndices GetQueueFamilyIndices();
+		CommandQueueFamilyIndices GetQueueFamilyIndices();
 
 		// Descriptor Sets
 		//-----------------------------------------------------------------------------
@@ -257,11 +243,6 @@ namespace CKE {
 		// SwapChain
 		//-----------------------------------------------------------------------------
 
-		// Create the device SwapChain with the given size and the
-		// supported formats found in the device. The specific configuration
-		// of the SwapChain is inside this method
-		void CreateSwapChain(Int2 frameBufferSize);
-
 		// Destroys the SwapChain texture views
 		void DestroySwapChainViews();
 
@@ -297,6 +278,7 @@ namespace CKE {
 
 		//Create an internal per-frame command list using the given description
 		void CreateCommandList(CommandListDesc desc);
+		void SetObjectDebugName(u64 objectHandle, VkObjectType objectType, const char* name);
 
 		// Auxiliary
 		//-----------------------------------------------------------------------------
@@ -304,7 +286,7 @@ namespace CKE {
 		void ResetAllPerFrameData();
 
 		// Auxiliary function to create a buffer
-		void CreateBufferInternal(BufferDesc bufferDesc, Buffer* pBuffer);
+		void CreateBuffer_Internal(BufferDesc bufferDesc, Buffer* pBuffer);
 
 		// Copy any data to a buffer in CPU-GPU or GPU-Only memory.
 		// TODO: The implementation is a bit sketchy but it works for now
@@ -314,7 +296,9 @@ namespace CKE {
 		u32 FindMemoryType(u32 typeFilter, VkMemoryPropertyFlags properties);
 
 		// Just a shortcut to retrieve the current frame data structure
-		FrameData_Vk& GetCurrentFrameData();
+		void GetCurrentFrameData();
+
+		void ConvertQueueFamilyFlagsToIndices(QueueFamilyFlags familyFlags, Array<u32, 3>& familyIndices, i32& familyIndicesCount);
 
 		// Descriptors
 		//-----------------------------------------------------------------------------
@@ -328,30 +312,25 @@ namespace CKE {
 		                                                Vector<DescriptorSetBuilder::Bindings>& shaderBindings);
 
 	private:
-		friend VulkanInstance;
+		friend RenderInstance;
 		friend DescriptorSetBuilder;
-		friend CommandList;
-		friend GraphicsCommandList;
-		friend TransferCommandList;
-		friend ComputeCommandList;
 		friend class RenderDeviceDebugUtils;
 
-		RenderResourcesDB m_ResourcesDB{};
+	private:
+		RenderInstance* m_RenderInstance{};
 
-		VulkanInstance   m_VulkanInstance{};
+		RenderResourcesDatabase m_ResourcesDB{};
+
+		CommandBufferManager m_CommandBufferManager{};
+		FrameSyncObjects     m_FrameSyncObjects{};
+		u32                  m_CurrFrameInFlightIdx = 0;
+
 		VkPhysicalDevice m_PhysicalDevice{};
 		VkDevice         m_Device{};
-		SwapChain        m_SwapChain{};
 		void*            m_pRenderTargetData = nullptr; // Pointer to platform window
 
-		u32                      m_CurrFrameInFlightIdx = 0;
-		FrameArray<FrameData_Vk> m_Frame{};
-
-		QueueFamilyIndices m_QueueFamilyIndices{};
-		VkQueue            m_GraphicsQueue{};
-		VkQueue            m_TransferQueue{};
-		VkQueue            m_ComputeQueue{};
-		VkQueue            m_PresentQueue{};
+		CommandQueueFamilyIndices m_QueueFamilyIndices{};
+		VmaAllocator              m_Allocator;
 	};
 }
 

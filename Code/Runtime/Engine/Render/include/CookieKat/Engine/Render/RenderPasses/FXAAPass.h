@@ -17,7 +17,7 @@ namespace CKE {
 		FXAAPass() : FGGraphicsRenderPass{"FXAAPass"} {}
 		void Initialize(RenderPassInitCtx* pCtx, ResourceSystem* pResources);
 		void Setup(FrameGraphSetupContext& setup) override;
-		void Execute(ExecuteResourcesCtx& ctx, GraphicsCommandList& cmdList, RenderDevice& rd) override;
+		void Execute(ExecuteResourcesCtx& ctx, CommandList& cmdList, RenderDevice& rd) override;
 
 	private:
 		RenderDevice*            m_pDevice = nullptr;

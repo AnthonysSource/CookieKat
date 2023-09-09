@@ -7,6 +7,7 @@
 #include "CookieKat/Systems/RenderAPI/Texture.h"
 
 namespace CKE {
+	class RenderDevice;
 	using RTextureHandle = u64;
 
 	// Texture with a size relative to the BackBuffer size.

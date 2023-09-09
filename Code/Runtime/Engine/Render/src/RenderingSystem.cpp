@@ -234,7 +234,7 @@ namespace CKE {
 	}
 
 	void RenderingSystem::InitializeRenderTarget(void* pRT) {
-		m_Device.PassRenderTargetData(pRT);
+		m_Device.SetRenderTargetData(pRT);
 	}
 
 	void RenderingSystem::InitializeDevice() {

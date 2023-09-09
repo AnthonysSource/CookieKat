@@ -16,7 +16,7 @@ namespace CKE {
 		BloomPreFilterPass() : FGGraphicsRenderPass{"Bloom Module"} {}
 		void Initialize(RenderPassInitCtx* pRenderSubSystems, ResourceSystem* pResources);
 		void Setup(FrameGraphSetupContext& setup) override;
-		void Execute(ExecuteResourcesCtx& ctx, GraphicsCommandList& cmdList, RenderDevice& rd) override;
+		void Execute(ExecuteResourcesCtx& ctx, CommandList& cmdList, RenderDevice& rd) override;
 
 	private:
 		PipelineHandle        m_PrePassPipeline{};
@@ -32,7 +32,7 @@ namespace CKE {
 		                i32            stage);
 		void SetInputOutput(FGResourceID input, FGResourceID output);
 		void Setup(FrameGraphSetupContext& setup) override;
-		void Execute(ExecuteResourcesCtx& ctx, GraphicsCommandList& cmdList, RenderDevice& rd) override;
+		void Execute(ExecuteResourcesCtx& ctx, CommandList& cmdList, RenderDevice& rd) override;
 
 	private:
 		PipelineHandle        m_BloomDownPipeline{};
@@ -49,7 +49,7 @@ namespace CKE {
 		                i32            stage);
 		void SetInputOutput(FGResourceID input, FGResourceID combineSrc, FGResourceID output);
 		void Setup(FrameGraphSetupContext& setup) override;
-		void Execute(ExecuteResourcesCtx& ctx, GraphicsCommandList& cmdList, RenderDevice& rd) override;
+		void Execute(ExecuteResourcesCtx& ctx, CommandList& cmdList, RenderDevice& rd) override;
 
 	private:
 		PipelineHandle        m_Pipeline{};
@@ -68,7 +68,7 @@ namespace CKE {
 		BloomCombinePass() : FGGraphicsRenderPass{"Bloom Combine"} {}
 		void Initialize(RenderPassInitCtx* pRenderSubSystems, ResourceSystem* pResources);
 		void Setup(FrameGraphSetupContext& setup) override;
-		void Execute(ExecuteResourcesCtx& ctx, GraphicsCommandList& cmdList, RenderDevice& rd) override;
+		void Execute(ExecuteResourcesCtx& ctx, CommandList& cmdList, RenderDevice& rd) override;
 
 	private:
 		PipelineHandle        m_Pipeline{};

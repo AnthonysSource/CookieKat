@@ -46,11 +46,11 @@ namespace CKE {
 
 		// Allocators
 		m_ResourceRecordAllocator = TPoolAllocator<ResourceRecord>{
-			CKE::Alloc(sizeof(ResourceRecord) * m_Settings.m_MaxLoadedResources), m_Settings.m_MaxLoadedResources
+			Memory::Alloc(sizeof(ResourceRecord) * m_Settings.m_MaxLoadedResources), m_Settings.m_MaxLoadedResources
 		};
-		m_PendingLoadRequestAllocator = TPoolAllocator<PendingLoadRequest>{CKE::Alloc(sizeof(PendingLoadRequest) * 200), 200};
-		m_AsyncRequestStateAllocator = TPoolAllocator<AsyncLoadRequestState>{CKE::Alloc(sizeof(AsyncLoadRequestState) * 200), 200};
-		m_AsyncInstallRequestAllocator = TPoolAllocator<AsyncInstallRequestState>{CKE::Alloc(sizeof(AsyncInstallRequestState) * 200), 200};
+		m_PendingLoadRequestAllocator = TPoolAllocator<PendingLoadRequest>{ Memory::Alloc(sizeof(PendingLoadRequest) * 200), 200};
+		m_AsyncRequestStateAllocator = TPoolAllocator<AsyncLoadRequestState>{ Memory::Alloc(sizeof(AsyncLoadRequestState) * 200), 200};
+		m_AsyncInstallRequestAllocator = TPoolAllocator<AsyncInstallRequestState>{ Memory::Alloc(sizeof(AsyncInstallRequestState) * 200), 200};
 	}
 
 	void ResourceSystem::UpdateStreaming() {
@@ -169,10 +169,10 @@ namespace CKE {
 
 	void ResourceSystem::Shutdown() {
 		// Release all of the allocators
-		CKE::Free(m_AsyncRequestStateAllocator.GetUnderlyingMemoryBlock());
-		CKE::Free(m_PendingLoadRequestAllocator.GetUnderlyingMemoryBlock());
-		CKE::Free(m_ResourceRecordAllocator.GetUnderlyingMemoryBlock());
-		CKE::Free(m_AsyncInstallRequestAllocator.GetUnderlyingMemoryBlock());
+		Memory::Free(m_AsyncRequestStateAllocator.GetUnderlyingMemoryBuffer());
+		Memory::Free(m_PendingLoadRequestAllocator.GetUnderlyingMemoryBuffer());
+		Memory::Free(m_ResourceRecordAllocator.GetUnderlyingMemoryBuffer());
+		Memory::Free(m_AsyncInstallRequestAllocator.GetUnderlyingMemoryBuffer());
 	}
 
 	//-----------------------------------------------------------------------------

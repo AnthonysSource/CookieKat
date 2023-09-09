@@ -104,7 +104,7 @@ namespace CKE {
 		cubeMap->m_Faces = rawTex;
 
 		TextureDesc textureDesc{};
-		textureDesc.m_Name = "CubeMap";
+		textureDesc.m_DebugName = "CubeMap";
 		textureDesc.m_Format = TextureFormat::R8G8B8A8_SRGB;
 		textureDesc.m_Size = UInt3{cubeMap->m_FaceWidth, cubeMap->m_FaceHeight, 1};
 		textureDesc.m_AspectMask = TextureAspectMask::Color;

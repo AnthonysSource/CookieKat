@@ -1,6 +1,8 @@
 #pragma once
 
 #include "CookieKat/Core/Containers/Containers.h"
+#include "CookieKat/Systems/RenderAPI/CommandQueue.h"
+#include "CommandList.h"
 
 #define NOMINMAX
 #define VK_USE_PLATFORM_WIN32_KHR
@@ -8,6 +10,7 @@
 #include <GLFW/glfw3.h>
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
+
 
 namespace CKE {
 	// Forward Declarations
@@ -22,9 +25,34 @@ namespace CKE {
 }
 
 namespace CKE {
-	class QueueFamilyIndices
+	struct RenderDeviceCreateInfo
+	{
+		CommandQueueDesc* m_QueueDesc;
+		u32               m_QueueDescCount;
+	};
+
+	class CommandQueueFamilyIndices
 	{
 	public:
+		inline u32 GetIndex(QueueType queueType) {
+			switch (queueType) {
+			case QueueType::Graphics: return m_GraphicsFamily;
+			case QueueType::Transfer: return m_TransferFamily;
+			case QueueType::Compute: return m_ComputeFamily;
+			default: CKE_UNREACHABLE_CODE();
+			}
+			return 0;
+		}
+
+		inline Array<u32, 3> GetGraphicsTransferComputeIdx() {
+			Array<u32, 3> familyIndices = {
+				GetGraphicsIdx(),
+				GetTransferIdx(),
+				GetComputeIdx()
+			};
+			return familyIndices;
+		}
+
 		inline u32 GetGraphicsIdx() { return m_GraphicsFamily; }
 		inline u32 GetTransferIdx() { return m_TransferFamily; }
 		inline u32 GetPresentIdx() { return m_PresentFamily; }
@@ -40,20 +68,19 @@ namespace CKE {
 }
 
 namespace CKE {
-	class VulkanInstance
+	class RenderInstance
 	{
 	public:
 		// Global Setup
 		//-----------------------------------------------------------------------------
 
-		void Initialize(void* pWindowData);
+		void Initialize();
 		void Shutdown();
 
-		inline VkSurfaceKHR GetSurface() const { return m_Surface; }
-		void                CreateLogicalDevice(RenderDevice& device);
+		RenderDevice CreateDevice(RenderDeviceCreateInfo const& deviceCreateInfo);
 
-		SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device);
-		QueueFamilyIndices      FindQueueFamilies(VkPhysicalDevice physicalDevice);
+		SwapChainSupportDetails   QuerySwapChainSupport(VkPhysicalDevice device);
+		CommandQueueFamilyIndices FindQueueFamilies(VkPhysicalDevice physicalDevice);
 
 	private:
 		friend RenderDevice;
@@ -71,17 +98,13 @@ namespace CKE {
 		void        CreateDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT msgCreateInfo);
 		void        ShutdownDebugMessenger();
 		static void ConfigVkDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT& msgCreateInfo);
+		void        RetrieveDebugFunctionPtrs();
 
 		static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 			VkDebugUtilsMessageSeverityFlagBitsEXT      messageSeverity,
 			VkDebugUtilsMessageSeverityFlagsEXT         messageType,
 			VkDebugUtilsMessengerCallbackDataEXT const* pCallbackData,
 			void*                                       pUserData);
-
-		// Surface
-		//-----------------------------------------------------------------------------
-
-		void CreateSurface(HWND window);
 
 		// Devices
 		//-----------------------------------------------------------------------------

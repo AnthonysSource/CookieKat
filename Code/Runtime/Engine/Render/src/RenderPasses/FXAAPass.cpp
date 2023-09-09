@@ -46,7 +46,7 @@ namespace CKE {
 
 	void FXAAPass::Setup(FrameGraphSetupContext& setup) {
 		TextureDesc outputTexDesc{};
-		outputTexDesc.m_Name = "FXAA Output";
+		outputTexDesc.m_DebugName = "FXAA Output";
 		outputTexDesc.m_Format = TextureFormat::R8G8B8A8_SRGB;
 		outputTexDesc.m_AspectMask = TextureAspectMask::Color;
 		outputTexDesc.m_TextureType = TextureType::Tex2D;
@@ -56,7 +56,7 @@ namespace CKE {
 		setup.UseTexture(ToneMappingPass::ToneMappped, FGPipelineAccessInfo::FragmentShaderRead());
 	}
 
-	void FXAAPass::Execute(ExecuteResourcesCtx& ctx, GraphicsCommandList& cmdList,
+	void FXAAPass::Execute(ExecuteResourcesCtx& ctx, CommandList& cmdList,
 	                       RenderDevice&         rd) {
 		TextureViewHandle sceneColor = ctx.GetTextureView(ToneMappingPass::ToneMappped);
 		TextureViewHandle fxaaOutput = ctx.GetTextureView(FXAAPass::FXAA_Output);
@@ -72,7 +72,7 @@ namespace CKE {
 			.m_UseDepthAttachment = false,
 		});
 
-		cmdList.SetPipeline(m_Pipeline);
+		cmdList.SetGraphicsPipeline(m_Pipeline);
 
 		// Set Pipeline Dynamic State
 		cmdList.SetDefaultViewportScissor(m_pView->m_Viewport.m_Extent);

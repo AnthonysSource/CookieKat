@@ -6,8 +6,8 @@ namespace CKE {
 	void TextureUploader::Initialize(RenderDevice* pDevice, u32 stagingBufferSize) {
 		// Create and fill staging buffer
 		BufferDesc stagingBufferDesc{};
-		stagingBufferDesc.m_Usage = BufferUsage::TransferSrc;
-		stagingBufferDesc.m_MemoryAccess = MemoryAccess::CPU_GPU;
+		stagingBufferDesc.m_Usage = BufferUsageFlags::TransferSrc;
+		stagingBufferDesc.m_MemoryAccess = MemoryAccess::CPU_GPU_Coherent;
 		stagingBufferDesc.m_SizeInBytes = stagingBufferSize;
 		m_StagingBuffer = pDevice->CreateBuffer(stagingBufferDesc);
 
@@ -38,7 +38,7 @@ namespace CKE {
 		// Set image layout to Transfer Dst
 		//-----------------------------------------------------------------------------
 
-		GraphicsCommandList graphicsCmdList = m_pDevice->GetGraphicsCmdList();
+		CommandList graphicsCmdList = m_pDevice->GetGraphicsCmdList();
 
 		graphicsCmdList.Begin();
 		graphicsCmdList.Barrier(TextureBarrierDescription{
@@ -68,7 +68,7 @@ namespace CKE {
 			.bufferRowLength = 0,
 			.bufferImageHeight = 0,
 			.imageSubresource = {
-				.aspectMask = ConversionsVK::GetVkImageAspectFlags(aspectType),
+				.aspectMask = ConversionsVk::GetVkImageAspectFlags(aspectType),
 				.mipLevel = 0,
 				.baseArrayLayer = 0,
 				.layerCount = 1,
@@ -129,7 +129,7 @@ namespace CKE {
 		// Set image layout to Transfer Dst
 		//-----------------------------------------------------------------------------
 
-		GraphicsCommandList graphicsCmdList = m_pDevice->GetGraphicsCmdList();
+		CommandList graphicsCmdList = m_pDevice->GetGraphicsCmdList();
 		graphicsCmdList.Begin();
 		graphicsCmdList.Barrier(TextureBarrierDescription{
 			.m_SrcStage = PipelineStage::AllCommands,
@@ -140,7 +140,7 @@ namespace CKE {
 			.m_NewLayout = TextureLayout::Transfer_Dst,
 			.m_Texture = targetTexture,
 			.m_AspectMask = TextureAspectMask::Color,
-			.m_Range = TextureRange{
+			.m_Subresource = TextureSubresourceLayers{
 				.m_AspectMask = TextureAspectMask::Color,
 				.m_BaseMip = 0,
 				.m_MipCount = 1,
@@ -202,7 +202,7 @@ namespace CKE {
 			.m_NewLayout = TextureLayout::Shader_ReadOnly,
 			.m_Texture = targetTexture,
 			.m_AspectMask = TextureAspectMask::Color,
-			.m_Range = TextureRange{
+			.m_Subresource = TextureSubresourceLayers{
 				.m_AspectMask = TextureAspectMask::Color,
 				.m_BaseMip = 0,
 				.m_MipCount = 1,
@@ -235,7 +235,7 @@ namespace CKE {
 		// Set image layout to Transfer Dst
 		//-----------------------------------------------------------------------------
 
-		GraphicsCommandList graphicsCmdList = m_pDevice->GetGraphicsCmdList();
+		CommandList graphicsCmdList = m_pDevice->GetGraphicsCmdList();
 		graphicsCmdList.Begin();
 		graphicsCmdList.Barrier(TextureBarrierDescription{
 			.m_SrcStage = PipelineStage::AllCommands,
@@ -246,7 +246,7 @@ namespace CKE {
 			.m_NewLayout = TextureLayout::Transfer_Dst,
 			.m_Texture = targetTexture,
 			.m_AspectMask = TextureAspectMask::Color,
-			.m_Range = TextureRange{
+			.m_Subresource = TextureSubresourceLayers{
 				.m_AspectMask = TextureAspectMask::Color,
 				.m_BaseMip = 0,
 				.m_MipCount = 1,
@@ -308,7 +308,7 @@ namespace CKE {
 			.m_NewLayout = TextureLayout::Shader_ReadOnly,
 			.m_Texture = targetTexture,
 			.m_AspectMask = TextureAspectMask::Color,
-			.m_Range = TextureRange{
+			.m_Subresource = TextureSubresourceLayers{
 				.m_AspectMask = TextureAspectMask::Color,
 				.m_BaseMip = 0,
 				.m_MipCount = 1,

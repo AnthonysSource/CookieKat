@@ -11,19 +11,8 @@
 using namespace CKE;
 
 //-----------------------------------------------------------------------------
-// Base Memory Operations
+// Auxiliary Data Types
 //-----------------------------------------------------------------------------
-
-TEST(Memory, AllocFree) {
-	u64* pMemory = (u64*)CKE::Alloc(sizeof(u64) * 100, alignof(u64));
-
-	for (u64 i = 0; i < 100; ++i) {
-		pMemory[i] = i;
-	}
-
-	CKE::Free(pMemory);
-	ASSERT_TRUE(true);
-}
 
 struct NewDeleteDataType
 {
@@ -31,11 +20,26 @@ struct NewDeleteDataType
 	i32 b = 6;
 };
 
+//-----------------------------------------------------------------------------
+// Base Memory Operations
+//-----------------------------------------------------------------------------
+
+TEST(Memory, AllocFree) {
+	u64* pMemory = (u64*)Memory::Alloc(sizeof(u64) * 100, alignof(u64));
+
+	for (u64 i = 0; i < 100; ++i) {
+		pMemory[i] = i;
+	}
+
+	Memory::Free(pMemory);
+	ASSERT_TRUE(true);
+}
+
 TEST(Memory, NewDelete) {
-	NewDeleteDataType* pObject = CKE::New<NewDeleteDataType>();
+	NewDeleteDataType* pObject = Memory::New<NewDeleteDataType>();
 	EXPECT_EQ(pObject->a, 2);
 	EXPECT_EQ(pObject->b, 6);
-	CKE::Free(pObject);
+	Memory::Free(pObject);
 }
 
 TEST(Memory, NewDeleteArray) {
@@ -59,19 +63,19 @@ TEST(Memory, NewDeleteArray) {
 	usize constexpr elemCount = 17;
 
 	i32  destructorArray[elemCount];
-	auto allocatedArray = CKE::NewArray<NewArrayElem>(elemCount, &destructorArray[0]);
+	auto allocatedArray = Memory::NewArray<NewArrayElem>(elemCount, &destructorArray[0]);
 
 	for (usize i = 0; i < elemCount; ++i) {
 		// Check constructor was called and that the alignment was correct
 		EXPECT_EQ(allocatedArray[i].ptr, &destructorArray[0]);
 		EXPECT_EQ(allocatedArray[i].i, 1);
-		EXPECT_TRUE(CKE::IsAligned(&allocatedArray[i]));
+		EXPECT_TRUE(Memory::IsAligned(&allocatedArray[i]));
 
 		allocatedArray[i].ptr = &destructorArray[i];
 		allocatedArray[i].i = i;
 	}
 
-	CKE::DeleteArray(allocatedArray);
+	Memory::DeleteArray(allocatedArray);
 
 	// Check destructor was called
 	for (int i = 0; i < elemCount; ++i) {
@@ -89,7 +93,7 @@ TEST(Memory, NewDeleteArray) {
 
 TEST(Allocators, LinearAllocator_AllocReset) {
 	constexpr u64   BLOCK_SIZE = 32;
-	void*           pMemoryBlock = CKE::Alloc(BLOCK_SIZE);
+	void*           pMemoryBlock = Memory::Alloc(BLOCK_SIZE);
 	LinearAllocator linearAllocator{pMemoryBlock, BLOCK_SIZE};
 
 	{
@@ -129,12 +133,12 @@ TEST(Allocators, LinearAllocator_AllocReset) {
 	}
 
 	linearAllocator.Reset();
-	CKE::Free(pMemoryBlock);
+	Memory::Free(pMemoryBlock);
 }
 
 TEST(Allocators, LinearAllocator_OverflowThrows) {
 	constexpr u64   BLOCK_SIZE = 1;
-	void*           pMemoryBlock = CKE::Alloc(BLOCK_SIZE);
+	void*           pMemoryBlock = Memory::Alloc(BLOCK_SIZE);
 	LinearAllocator linearAllocator{pMemoryBlock, BLOCK_SIZE};
 
 #ifdef CKE_BUILDSYSTEM_ASSERTS_ENABLE
@@ -144,12 +148,32 @@ TEST(Allocators, LinearAllocator_OverflowThrows) {
 	linearAllocator.Reset();
 }
 
+TEST(Allocators, LinearAllocator_GetTotalSize) {
+	constexpr u64   BLOCK_SIZE = 32;
+	void* pMemoryBlock = Memory::Alloc(BLOCK_SIZE);
+	LinearAllocator linearAllocator{ pMemoryBlock, BLOCK_SIZE };
+
+	EXPECT_EQ(linearAllocator.GetTotalSizeInBytes(), 32);
+}
+
+TEST(Allocators, LinearAllocator_GetAllocatedSize) {
+	constexpr u64   BLOCK_SIZE = 32;
+	void* pMemoryBlock = Memory::Alloc(BLOCK_SIZE);
+	LinearAllocator linearAllocator{ pMemoryBlock, BLOCK_SIZE };
+
+	EXPECT_EQ(linearAllocator.GetAllocatedSizeInBytes(), 0);
+	void* pA = linearAllocator.Alloc(4);
+	EXPECT_EQ(linearAllocator.GetAllocatedSizeInBytes(), 4);
+	void* pB = linearAllocator.Alloc(16);
+	EXPECT_EQ(linearAllocator.GetAllocatedSizeInBytes(), 20);
+}
+
 // Pool Allocator
 //-----------------------------------------------------------------------------
 
 TEST(Allocators, PoolAllocator_AllocReset) {
 	constexpr u64 BLOCK_SIZE = 32;
-	void*         pMemoryBlock = CKE::Alloc(BLOCK_SIZE);
+	void*         pMemoryBlock = Memory::Alloc(BLOCK_SIZE);
 	PoolAllocator poolAllocator{static_cast<char*>(pMemoryBlock), 8, BLOCK_SIZE};
 
 	{
@@ -179,13 +203,13 @@ TEST(Allocators, PoolAllocator_AllocReset) {
 	}
 
 	poolAllocator.Reset();
-	Free(pMemoryBlock);
+	Memory::Free(pMemoryBlock);
 }
 
 TEST(Allocators, PoolAllocator_AllocFree) {
 	constexpr u64 BLOCK_SIZE = sizeof(u64) * 3;
-	void* pMemoryBlock = CKE::Alloc(BLOCK_SIZE);
-	PoolAllocator poolAllocator{ static_cast<char*>(pMemoryBlock), sizeof(u64), BLOCK_SIZE};
+	void*         pMemoryBlock = Memory::Alloc(BLOCK_SIZE);
+	PoolAllocator poolAllocator{pMemoryBlock, sizeof(u64), BLOCK_SIZE};
 
 	u64* pA = poolAllocator.Alloc<u64>();
 	u64* pB = poolAllocator.Alloc<u64>();
@@ -202,5 +226,57 @@ TEST(Allocators, PoolAllocator_AllocFree) {
 	EXPECT_EQ(*pB, 6);
 
 	poolAllocator.Reset();
-	CKE::Free(pMemoryBlock);
+	Memory::Free(pMemoryBlock);
+}
+
+// Stack Allocator
+//-----------------------------------------------------------------------------
+
+TEST(Allocators, StackAllocator_AllocFree) {
+	StackAllocator stackAllocator{ Memory::Alloc(sizeof(u64) * 3), sizeof(u64) * 3 };
+}
+
+//-----------------------------------------------------------------------------
+// Memory Tracking
+//-----------------------------------------------------------------------------
+
+TEST(MemoryTrackingManager, Track_Alloc_Free) {
+	void* pMemory = Memory::Alloc(64);
+
+	EXPECT_EQ(Memory::g_MemoryTracking.GetTotalAllocatedMemory(), 64);
+	EXPECT_EQ(Memory::g_MemoryTracking.GetTotalReleasedMemory(), 0);
+	EXPECT_EQ(Memory::g_MemoryTracking.GetAllocatedMemorySize(), 64);
+
+	Memory::Free(pMemory);
+
+	EXPECT_EQ(Memory::g_MemoryTracking.GetTotalAllocatedMemory(), 64);
+	EXPECT_EQ(Memory::g_MemoryTracking.GetTotalReleasedMemory(), 64);
+	EXPECT_EQ(Memory::g_MemoryTracking.GetAllocatedMemorySize(), 0);
+
+	Vector<Memory::MemoryOperationInfo> const& ops = Memory::g_MemoryTracking.GetOperationsHistory();
+
+	EXPECT_EQ(ops.size(), 2);
+	EXPECT_EQ(ops[0].m_Operation, Memory::MemoryOp::Alloc);
+	EXPECT_EQ(ops[1].m_Operation, Memory::MemoryOp::Free);
+}
+
+TEST(MemoryTrackingManager, Track_New_Delete) {
+	Memory::g_MemoryTracking.Reset();
+	u64* pMemory = Memory::New<u64>(1);
+
+	EXPECT_EQ(Memory::g_MemoryTracking.GetTotalAllocatedMemory(), sizeof(u64));
+	EXPECT_EQ(Memory::g_MemoryTracking.GetTotalReleasedMemory(), 0);
+	EXPECT_EQ(Memory::g_MemoryTracking.GetAllocatedMemorySize(), sizeof(u64));
+
+	Memory::Delete(pMemory);
+
+	EXPECT_EQ(Memory::g_MemoryTracking.GetTotalAllocatedMemory(), sizeof(u64));
+	EXPECT_EQ(Memory::g_MemoryTracking.GetTotalReleasedMemory(), sizeof(u64));
+	EXPECT_EQ(Memory::g_MemoryTracking.GetAllocatedMemorySize(), 0);
+
+	Vector<Memory::MemoryOperationInfo> const& ops = Memory::g_MemoryTracking.GetOperationsHistory();
+
+	EXPECT_EQ(ops.size(), 2);
+	EXPECT_EQ(ops[0].m_Operation, Memory::MemoryOp::New);
+	EXPECT_EQ(ops[1].m_Operation, Memory::MemoryOp::Delete);
 }

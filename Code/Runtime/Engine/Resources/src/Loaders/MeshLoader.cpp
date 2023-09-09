@@ -70,23 +70,19 @@ namespace CKE {
 		auto meshResource = ctx.GetResource<MeshResource>();
 
 		BufferDesc vertexBufferDesc;
-		vertexBufferDesc.m_Usage = BufferUsage::Vertex | BufferUsage::TransferDst;
+		vertexBufferDesc.m_Usage = BufferUsageFlags::Vertex | BufferUsageFlags::TransferDst;
 		vertexBufferDesc.m_MemoryAccess = MemoryAccess::GPU;
 		vertexBufferDesc.m_SizeInBytes = meshResource->m_Vertices.size() * sizeof(meshResource->
 			m_Vertices[0]);
 		vertexBufferDesc.m_StrideInBytes = sizeof(meshResource->m_Vertices[0]);
-		meshResource->m_VertexBufferHandle = m_pDevice->CreateBuffer_DEPR(vertexBufferDesc,
-		                                                                  meshResource->m_Vertices.data(),
-		                                                                  vertexBufferDesc.m_SizeInBytes);
+		meshResource->m_VertexBufferHandle = m_pDevice->CreateBuffer(vertexBufferDesc);
 
 		BufferDesc indexBufferDesc;
-		indexBufferDesc.m_Usage = BufferUsage::Index | BufferUsage::TransferDst;
+		indexBufferDesc.m_Usage = BufferUsageFlags::Index | BufferUsageFlags::TransferDst;
 		indexBufferDesc.m_MemoryAccess = MemoryAccess::GPU;
 		indexBufferDesc.m_SizeInBytes = meshResource->m_Indices.size() * sizeof(u32);
 		indexBufferDesc.m_StrideInBytes = sizeof(u32);
-		meshResource->m_IndexBufferHandle = m_pDevice->CreateBuffer_DEPR(indexBufferDesc,
-		                                                                 meshResource->m_Indices.data(),
-		                                                                 indexBufferDesc.m_SizeInBytes);
+		meshResource->m_IndexBufferHandle = m_pDevice->CreateBuffer(indexBufferDesc);
 
 		return LoadResult::Successful;
 	}

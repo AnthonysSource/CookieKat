@@ -3,6 +3,8 @@
 #include "CookieKat/Systems/RenderAPI/RenderHandle.h"
 
 namespace CKE {
+	class RenderDevice;
+
 	struct ParticleDataGPU
 	{
 		Vec4 m_Pos;

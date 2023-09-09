@@ -3,6 +3,7 @@
 #include "CookieKat/Systems/RenderAPI/RenderHandle.h"
 
 namespace CKE {
+	class RenderDevice;
 	class EntityDatabase;
 
 	// Simple Globally accessible rendering assets like default textures or basic meshes 

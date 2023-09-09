@@ -5,12 +5,13 @@
 #include "CookieKat/Systems/RenderAPI/Vulkan/Instance_Vk.h"
 #include "CookieKat/Systems/RenderAPI/Vulkan/RenderDevice_Vk.h"
 #include "CookieKat/Systems/RenderAPI/RenderHandle.h"
+#include "CookieKat/Systems/RenderAPI/CommandQueue.h"
 
 #include <vulkan/vulkan_core.h>
 #include <iostream>
 
 namespace CKE {
-	bool VulkanInstance::CheckInstanceValidationLayersSupport(Vector<const char*> const& validationLayers) {
+	bool RenderInstance::CheckInstanceValidationLayersSupport(Vector<const char*> const& validationLayers) {
 		u32 layerCount;
 		vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
 		Vector<VkLayerProperties> availableLayers(layerCount);
@@ -31,7 +32,7 @@ namespace CKE {
 		return true;
 	}
 
-	void VulkanInstance::GetRequiredInstanceExtensions(Vector<const char*>& requiredExtensions) {
+	void RenderInstance::GetRequiredInstanceExtensions(Vector<const char*>& requiredExtensions) {
 		u32          glfwExtensionCount = 0;
 		const char** glfwExtensionNames = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
 
@@ -69,7 +70,7 @@ namespace CKE {
 		func(instance, debugMessenger, pAllocator);
 	}
 
-	void VulkanInstance::EnumerateExtensionsToConsole(Vector<VkExtensionProperties> const& extensions) {
+	void RenderInstance::EnumerateExtensionsToConsole(Vector<VkExtensionProperties> const& extensions) {
 		std::cout << "-----------------------------------------------------------------------------" << std::endl;
 		std::cout << "Available Extensions:" << std::endl;
 		std::cout << "-----------------------------------------------------------------------------" << std::endl;
@@ -78,7 +79,7 @@ namespace CKE {
 		}
 	}
 
-	VkBool32 VulkanInstance::DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT      messageSeverity,
+	VkBool32 RenderInstance::DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT      messageSeverity,
 	                                       VkDebugUtilsMessageSeverityFlagsEXT         messageType,
 	                                       VkDebugUtilsMessengerCallbackDataEXT const* pCallbackData,
 	                                       void*                                       pUserData) {
@@ -104,18 +105,7 @@ namespace CKE {
 		return VK_FALSE;
 	}
 
-	void VulkanInstance::CreateSurface(HWND window) {
-		VkWin32SurfaceCreateInfoKHR createInfo{};
-		createInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
-		createInfo.hwnd = window;
-		createInfo.hinstance = GetModuleHandle(nullptr);
-
-		if (vkCreateWin32SurfaceKHR(m_Instance, &createInfo, nullptr, &m_Surface) != VK_SUCCESS) {
-			std::cout << "Error creating Win32 surface" << std::endl;
-		}
-	}
-
-	VkPhysicalDevice VulkanInstance::SelectPhysicalDevice(Vector<const char*> const& requiredExtensions) {
+	VkPhysicalDevice RenderInstance::SelectPhysicalDevice(Vector<const char*> const& requiredExtensions) {
 		// Enumerate all physical devices
 		u32 deviceCount = 0;
 		vkEnumeratePhysicalDevices(m_Instance, &deviceCount, nullptr);
@@ -139,7 +129,7 @@ namespace CKE {
 		return physicalDevice;
 	}
 
-	bool VulkanInstance::CheckDeviceSupportsNecessaryExtensions(VkPhysicalDevice           device,
+	bool RenderInstance::CheckDeviceSupportsNecessaryExtensions(VkPhysicalDevice           device,
 	                                                            Vector<const char*> const& deviceExtensions) {
 		u32 extensionCount;
 		vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
@@ -154,7 +144,7 @@ namespace CKE {
 		return requiredExtensions.empty();
 	}
 
-	bool VulkanInstance::IsPhysicalDeviceSuitable(VkPhysicalDevice           device,
+	bool RenderInstance::IsPhysicalDeviceSuitable(VkPhysicalDevice           device,
 	                                              Vector<const char*> const& requiredExtensions) {
 		// VulkanDevice properties & features
 		VkPhysicalDeviceProperties properties{};
@@ -163,7 +153,7 @@ namespace CKE {
 		vkGetPhysicalDeviceFeatures(device, &features);
 
 		// Queue Families Support
-		QueueFamilyIndices queueFamilyIndices = FindQueueFamilies(device);
+		CommandQueueFamilyIndices queueFamilyIndices = FindQueueFamilies(device);
 
 		// Extensions Support
 		bool extensionsSupported = CheckDeviceSupportsNecessaryExtensions(device, requiredExtensions);
@@ -182,8 +172,8 @@ namespace CKE {
 				swapChainAdequate;
 	}
 
-	QueueFamilyIndices VulkanInstance::FindQueueFamilies(VkPhysicalDevice physicalDevice) {
-		QueueFamilyIndices indices{};
+	CommandQueueFamilyIndices RenderInstance::FindQueueFamilies(VkPhysicalDevice physicalDevice) {
+		CommandQueueFamilyIndices indices{};
 
 		u32 queueFamilyCount = 0;
 		vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, nullptr);
@@ -237,35 +227,27 @@ namespace CKE {
 		return indices;
 	}
 
-	void VulkanInstance::CreateLogicalDevice(RenderDevice& device) {
-		Vector<const char*> deviceRequiredExt = {
+	RenderDevice RenderInstance::CreateDevice(RenderDeviceCreateInfo const& deviceCreateInfo) {
+		RenderDevice device{};
+
+		Vector<char const*> deviceRequiredExt = {
 			VK_KHR_SWAPCHAIN_EXTENSION_NAME
 		};
-
 		device.m_PhysicalDevice = SelectPhysicalDevice(deviceRequiredExt);
 		device.m_QueueFamilyIndices = FindQueueFamilies(device.m_PhysicalDevice);
 
 		// Queues
 		//-----------------------------------------------------------------------------
 
-		Set<u32> uniqueQueueFamilies{
-			{
-				device.m_QueueFamilyIndices.m_GraphicsFamily,
-				device.m_QueueFamilyIndices.m_PresentFamily,
-				device.m_QueueFamilyIndices.m_TransferFamily,
-				device.m_QueueFamilyIndices.m_ComputeFamily
-			}
-		};
-
 		Vector<VkDeviceQueueCreateInfo> queueCreateInfos{};
-		f32                             queuePriority = 1.0f;
+		for (i32 i = 0; i < deviceCreateInfo.m_QueueDescCount; ++i) {
+			CommandQueueDesc desc = deviceCreateInfo.m_QueueDesc[i];
 
-		for (u32 familyIndex : uniqueQueueFamilies) {
 			VkDeviceQueueCreateInfo queueCreateInfo{};
 			queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-			queueCreateInfo.queueFamilyIndex = familyIndex;
+			queueCreateInfo.queueFamilyIndex = device.m_QueueFamilyIndices.GetIndex(desc.m_QueueType);
 			queueCreateInfo.queueCount = 1;
-			queueCreateInfo.pQueuePriorities = &queuePriority;
+			queueCreateInfo.pQueuePriorities = &desc.m_Priority.m_Value;
 			queueCreateInfos.emplace_back(queueCreateInfo);
 		}
 
@@ -305,22 +287,14 @@ namespace CKE {
 			deviceCreateInfo.enabledLayerCount = static_cast<u32>(m_ValidationLayers.size());
 			deviceCreateInfo.ppEnabledLayerNames = m_ValidationLayers.data();
 		}
-		else { deviceCreateInfo.enabledLayerCount = 0; }
-
-		if (vkCreateDevice(device.m_PhysicalDevice, &deviceCreateInfo, nullptr, &device.m_Device) != VK_SUCCESS) {
-			std::cout << "Error creating logical device" << std::endl;
+		else {
+			deviceCreateInfo.enabledLayerCount = 0;
 		}
 
-		// Get Queues
-		//-----------------------------------------------------------------------------
-
-		vkGetDeviceQueue(device.m_Device, device.m_QueueFamilyIndices.m_GraphicsFamily, 0, &device.m_GraphicsQueue);
-		vkGetDeviceQueue(device.m_Device, device.m_QueueFamilyIndices.m_PresentFamily, 0, &device.m_PresentQueue);
-		vkGetDeviceQueue(device.m_Device, device.m_QueueFamilyIndices.m_TransferFamily, 0, &device.m_TransferQueue);
-		vkGetDeviceQueue(device.m_Device, device.m_QueueFamilyIndices.m_ComputeFamily, 0, &device.m_ComputeQueue);
+		VK_CHECK_CALL(vkCreateDevice(device.m_PhysicalDevice, &deviceCreateInfo, nullptr, &device.m_Device));
 	}
 
-	SwapChainSupportDetails VulkanInstance::QuerySwapChainSupport(VkPhysicalDevice device) {
+	SwapChainSupportDetails RenderInstance::QuerySwapChainSupport(VkPhysicalDevice device) {
 		SwapChainSupportDetails details{};
 
 		// Capabilities
@@ -346,7 +320,7 @@ namespace CKE {
 		return details;
 	}
 
-	void VulkanInstance::ConfigVkDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT& msgCreateInfo) {
+	void RenderInstance::ConfigVkDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT& msgCreateInfo) {
 		msgCreateInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
 		msgCreateInfo.messageSeverity =
 				VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
@@ -359,7 +333,7 @@ namespace CKE {
 		msgCreateInfo.pUserData = nullptr;
 	}
 
-	void VulkanInstance::CreateInstance(VkDebugUtilsMessengerCreateInfoEXT& msgCreateInfo) {
+	void RenderInstance::CreateInstance(VkDebugUtilsMessengerCreateInfoEXT& msgCreateInfo) {
 		// Application Info
 		//-----------------------------------------------------------------------------
 
@@ -421,40 +395,48 @@ namespace CKE {
 		}
 	}
 
-	void VulkanInstance::CreateDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT msgCreateInfo) {
+	void RenderInstance::CreateDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT msgCreateInfo) {
 		if (RenderSettings::ENABLE_DEBUG) {
-			VkResult msgResult = CreateDebugUtilsMessengerEXT(m_Instance, &msgCreateInfo, nullptr, &m_DebugMessenger);
-			if (msgResult != VK_SUCCESS) { std::cout << "Error creating debug messenger" << std::endl; }
+			VK_CHECK_CALL(CreateDebugUtilsMessengerEXT(m_Instance, &msgCreateInfo, nullptr, &m_DebugMessenger));
 		}
 	}
 
-	void VulkanInstance::Initialize(void* pWindowData) {
-		CKE_ASSERT(pWindowData != nullptr);
+	void RenderInstance::RetrieveDebugFunctionPtrs() {
+		pfnSetDebugUtilsObjectNameEXT = (PFN_vkSetDebugUtilsObjectNameEXT)vkGetInstanceProcAddr(
+			m_Instance, "vkSetDebugUtilsObjectNameEXT");
+		pfnCmdBeginDebugUtilsLabelEXT = (PFN_vkCmdBeginDebugUtilsLabelEXT)vkGetInstanceProcAddr(
+			m_Instance, "vkCmdBeginDebugUtilsLabelEXT");
+		pfnCmdEndDebugUtilsLabelEXT = (PFN_vkCmdEndDebugUtilsLabelEXT)vkGetInstanceProcAddr(
+			m_Instance, "vkCmdEndDebugUtilsLabelEXT");
+	}
+
+	void RenderInstance::Initialize() {
 		VkDebugUtilsMessengerCreateInfoEXT msgCreateInfo;
 
 		CreateInstance(msgCreateInfo);
 		CreateDebugMessenger(msgCreateInfo);
 		CreateSurface((HWND)pWindowData);
+		RetrieveDebugFunctionPtrs();
 	}
 
-	void VulkanInstance::ShutdownDebugMessenger() {
+	void RenderInstance::ShutdownDebugMessenger() {
 		if (RenderSettings::ENABLE_DEBUG) { DestroyDebugUtilsMessengerEXT(m_Instance, m_DebugMessenger, nullptr); }
 	}
 
-	void VulkanInstance::Shutdown() {
+	void RenderInstance::Shutdown() {
 		vkDestroySurfaceKHR(m_Instance, m_Surface, nullptr);
 		ShutdownDebugMessenger();
 		vkDestroyInstance(m_Instance, nullptr);
 	}
 
-	void FrameData_Vk::Initialize(RenderDevice& device) {
+	void FrameData::Initialize(RenderDevice& device) {
 		m_InFlightFence = device.CreateFence(true);
 		m_ImageAvailableSemaphore = device.CreateSemaphoreGPU();
 		m_RenderFinishedSemaphore = device.CreateSemaphoreGPU();
 	}
 
-	void FrameData_Vk::ResetForNewFrame() {
-		for (auto& [handle, frameData] : m_PipelineFrameData) {
+	void FrameData::ResetForNewFrame() {
+		for (auto& [handle, frameData] : m_da) {
 			frameData.m_DescriptorSets.clear();
 		}
 
@@ -463,33 +445,33 @@ namespace CKE {
 		m_LastCmdIdxCompute = 0;
 	}
 
-	void FrameData_Vk::Destroy(RenderDevice& device) { }
+	void FrameData::Destroy(RenderDevice& device) { }
 
-	VkCommandBuffer FrameData_Vk::GetNextCmdBuffer(CommandListType type) {
+	VkCommandBuffer FrameData::GetNextCmdBuffer(QueueType type) {
 		switch (type) {
-		case CommandListType::Graphics: return GetNextGraphicsCmdBuffer();
-		case CommandListType::Transfer: return GetNextTransferCmdBuffer();
-		case CommandListType::Compute: return GetNextComputeCmdBuffer();
+		case QueueType::Graphics: return GetNextGraphicsCmdBuffer();
+		case QueueType::Transfer: return GetNextTransferCmdBuffer();
+		case QueueType::Compute: return GetNextComputeCmdBuffer();
 		default: CKE_UNREACHABLE_CODE();
 		}
 		return (VkCommandBuffer)0;
 	}
 
-	VkCommandBuffer FrameData_Vk::GetNextGraphicsCmdBuffer() {
+	VkCommandBuffer FrameData::GetNextGraphicsCmdBuffer() {
 		CKE_ASSERT(m_LastCmdIdxGraphics < m_GraphicsCommandBuffer.size());
 		VkCommandBuffer cmdBuff = m_GraphicsCommandBuffer[m_LastCmdIdxGraphics];
 		m_LastCmdIdxGraphics++;
 		return cmdBuff;
 	}
 
-	VkCommandBuffer FrameData_Vk::GetNextTransferCmdBuffer() {
+	VkCommandBuffer FrameData::GetNextTransferCmdBuffer() {
 		CKE_ASSERT(m_LastCmdIdxTransfer < m_TransferCommandBuffer.size());
 		VkCommandBuffer cmdBuff = m_TransferCommandBuffer[m_LastCmdIdxTransfer];
 		m_LastCmdIdxTransfer++;
 		return cmdBuff;
 	}
 
-	VkCommandBuffer FrameData_Vk::GetNextComputeCmdBuffer() {
+	VkCommandBuffer FrameData::GetNextComputeCmdBuffer() {
 		CKE_ASSERT(m_LastCmdIdxCompute < m_ComputeCommandBuffer.size());
 		VkCommandBuffer cmdBuff = m_ComputeCommandBuffer[m_LastCmdIdxCompute];
 		m_LastCmdIdxCompute++;

@@ -5,6 +5,7 @@
 #include "CookieKat/Systems/RenderAPI/Pipeline.h"
 
 #include <vulkan/vulkan_core.h>
+#include <vk_mem_alloc.h>
 
 namespace CKE {
 	// Shorthand for an array that contains data that has a per-frame copy
@@ -42,20 +43,19 @@ namespace CKE {
 	class Buffer : public RenderResource<Buffer>
 	{
 	public:
-		VkBuffer       m_vkBuffer;
-		VkDeviceMemory m_vkMemory;
-		u64            m_Offset;
-		u64            m_Size;
-		bool           m_IsPerFrame;
-		void*          m_pMapped = nullptr;
+		VkBuffer      m_vkBuffer{};
+		VmaAllocation m_vmaAllocation{};
+		u64           m_Size = 0;
+		bool          m_IsPerFrame = false;
+		void*         m_pMappedAddress = nullptr;
 	};
 
 	class Texture : public RenderResource<Texture>
 	{
 	public:
 		Vector<TextureViewHandle> m_ExistingViews{};
-		VkImage                   m_vkImage;
-		VkDeviceMemory            m_vkDeviceMemory;
+		VkImage                   m_vkImage{};
+		VmaAllocation             m_vmaAllocation{};
 	};
 
 	class TextureView : public RenderResource<TextureView>
@@ -77,5 +77,12 @@ namespace CKE {
 	public:
 		VkDescriptorSet m_DescriptorSet;
 		u32             m_LayoutIndex;
+	};
+
+	class CommandQueue : public RenderResource<CommandQueue>
+	{
+	public:
+		VkQueue m_vkQueue;
+		u32 m_QueueIdx;
 	};
 }

@@ -35,19 +35,20 @@ Debugging Toggles
 	[NO] Asserts
 */
 
-namespace {
-	using namespace CKE;
-
+namespace CKE::Memory {
 	// Settings
 	//-----------------------------------------------------------------------------
 
 	// NOTE: General asserts must be enabled in the build system for this to work
 	constexpr bool CKE_MEMORY_ASSERT_ENABLED = true;
+
 	// Toggle logging all of the memory operations realized
 	constexpr bool CKE_MEMORY_LOG = false;
+
 	// Toggle storing a history of all memory operations (TODO: NOT WORKING, IN DEV.)
 	constexpr bool CKE_MEMORY_TRACK = true;
 
+	// Default alignment of allocations
 	constexpr u32 DEFAULT_ALLOC_ALIGNMENT{8};
 
 	//-----------------------------------------------------------------------------
@@ -100,31 +101,79 @@ namespace {
 
 	struct MemoryOperationInfo
 	{
-		MemoryOp m_Operation;
-		void*    m_pAddress = nullptr;
-		u64      m_Size;
-		u32      m_Alignment;
+		MemoryOp    m_Operation = MemoryOp::Alloc;
+		void*       m_pAddress = nullptr;
+		u64         m_Size = 0;
+		u32         m_Alignment = 0;
+		char const* m_pTypeName = "void"; // Only changes when the memory op is "New / Delete" or a variant
+
+		// Constructors
+		//---------------------
+
+		MemoryOperationInfo() = default;
+
+		MemoryOperationInfo(MemoryOp mOperation, void* mPAddress, u64 mSize, u32 mAlignment)
+			: m_Operation{mOperation},
+			  m_pAddress{mPAddress},
+			  m_Size{mSize},
+			  m_Alignment{mAlignment} {}
+
+		MemoryOperationInfo(MemoryOp mOperation, void* mPAddress, u64 mSize, u32 mAlignment, char const* pTypeName)
+			: m_Operation{mOperation},
+			  m_pAddress{mPAddress},
+			  m_Size{mSize},
+			  m_Alignment{mAlignment},
+			  m_pTypeName{pTypeName} {}
 	};
 
-	// Stores statistics about all of the tracked memory operations
-	class MemoryTracking
+	// Manager that tracks memory statistics about operations realized by the application
+	class MemoryTrackingManager
 	{
 	public:
-		void RecordOperation(MemoryOperationInfo operationInfo) {
-			m_OperationsHistory.push_back(operationInfo);
+		// Constructors
+		//---------------------
+
+		MemoryTrackingManager() = default;
+
+		// Accessors
+		//---------------------
+
+		Vector<MemoryOperationInfo> const& GetOperationsHistory() const { return m_OperationsHistory; }
+
+		u64 GetAllocatedMemorySize() const { return m_TotalAllocated - m_TotalReleased; }
+
+		u64 GetTotalAllocatedMemory() const { return m_TotalAllocated; }
+
+		u64 GetTotalReleasedMemory() const { return m_TotalReleased; }
+
+		MemoryAllocationInfo GetAllocationInfo(void* pAddress) const { return m_ActiveAllocations.at((MemoryAddress)pAddress); }
+
+		// Manipulators
+		//---------------------
+
+		inline void Reset() {
+			m_TotalAllocated = 0;
+			m_TotalReleased = 0;
+			m_OperationsHistory.clear();
+			m_ActiveAllocations.clear();
 		}
 
-	public:
-		u64                               m_TotalAllocated = 0;
-		u64                               m_TotalFreed = 0;
-		Array<MemoryAllocationInfo, 2500> m_AllocationsState;
-		Vector<MemoryOperationInfo>       m_OperationsHistory;
+		void RecordOperation(MemoryOperationInfo operationInfo);
+
+		using MemoryAddress = u64;
+
+	private:
+		u64 m_TotalAllocated = 0;
+		u64 m_TotalReleased = 0;
+
+		Vector<MemoryOperationInfo>              m_OperationsHistory;
+		Map<MemoryAddress, MemoryAllocationInfo> m_ActiveAllocations;
 	};
 
-	inline MemoryTracking g_MemoryTracking{};
+	inline MemoryTrackingManager g_MemoryTracking{};
 }
 
-namespace CKE {
+namespace CKE::Memory {
 	// Basic Memory Operations
 	//-----------------------------------------------------------------------------
 
@@ -167,7 +216,8 @@ namespace CKE {
 		if constexpr (CKE_MEMORY_ASSERT_ENABLED) { CKE_ASSERT(pMemoryBlock != nullptr); }
 		if constexpr (CKE_MEMORY_LOG) { MemoryLog(pMemoryBlock, MemoryOp::Free, "void", 0, 0); }
 		if constexpr (CKE_MEMORY_TRACK) {
-			g_MemoryTracking.RecordOperation(MemoryOperationInfo{MemoryOp::Free, pMemoryBlock, 0, 0});
+			MemoryAllocationInfo allocInfo = g_MemoryTracking.GetAllocationInfo(pMemoryBlock);
+			g_MemoryTracking.RecordOperation(MemoryOperationInfo{MemoryOp::Free, pMemoryBlock, allocInfo.m_Size, allocInfo.m_Alignment});
 		}
 		_aligned_free(pMemoryBlock);
 	}
@@ -269,7 +319,7 @@ namespace CKE {
 	// Example:
 	//     u32* arr = CKE::NewArray(10, 0);
 	//     CKE::DeleteArray(arr);
-	template <typename T, typename... ConstructorArgs>
+	template <typename T>
 	void DeleteArray(T*& pArray) {
 		if constexpr (CKE_MEMORY_ASSERT_ENABLED) { CKE_ASSERT(pArray != nullptr); }
 		if constexpr (CKE_MEMORY_LOG) { MemoryLog<T>(pArray, MemoryOp::DeleteArray); };
@@ -310,14 +360,18 @@ namespace CKE {
 	using Rc = std::shared_ptr<T>;
 
 	// Creates a UPtr (Unique Pointer) of the given type, using the provided construction arguments
+	//
+	// See 'UPtr<T>' declaration for usage.
 	template <typename T, typename... ConstructorArgs>
 	[[nodiscard]] CKE_FORCE_INLINE UPtr<T> MakeUPtr(ConstructorArgs&&... args) {
-		return UPtr<T>(CKE::New<T>(std::forward<ConstructorArgs>(args)...));
+		return UPtr<T>(Memory::New<T>(std::forward<ConstructorArgs>(args)...));
 	}
 
 	// Creates a Rc (Reference Counted Smart Pointer) of the given type, using the provided construction arguments
+	//
+	// See "Rc<T>" declaration for usage.
 	template <typename T, typename... ConstructorArgs>
-	[[nodiscard]] CKE_FORCE_INLINE UPtr<T> MakeRc(ConstructorArgs&&... args) {
+	[[nodiscard]] CKE_FORCE_INLINE Rc<T> MakeRc(ConstructorArgs&&... args) {
 		return std::make_shared<T>(std::forward<ConstructorArgs>(args)...);
 	}
 

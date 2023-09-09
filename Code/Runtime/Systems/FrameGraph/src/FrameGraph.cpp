@@ -362,7 +362,7 @@ namespace CKE {
 
 			for (auto&& createInfo : setupCtx.m_CreateTextures) {
 				createInfo.m_Desc.m_Usage = usageDataMap[createInfo.m_ID].m_Usage;
-				createInfo.m_Desc.m_ConcurrentQueueUsage = false;
+				createInfo.m_Desc.m_ConcurrentSharingMode = false;
 			}
 
 			CreateTransientResources(setupCtx);
@@ -533,7 +533,7 @@ namespace CKE {
 	}
 
 	// Adds the already calculated barriers for the resources to the command list
-	void FrameGraph::RecordResouceTransitions(GraphicsCommandList& cmdList, RenderPassData& renderPass) {
+	void FrameGraph::RecordResouceTransitions(CommandList& cmdList, RenderPassData& renderPass) {
 		cmdList.Barrier(renderPass.m_TransitionsBefore);
 	}
 
@@ -550,7 +550,7 @@ namespace CKE {
 
 	void FrameGraph::Execute_ReturnTexturesToOriginal(SemaphoreHandle signalSemaphoreOnFinish, FenceHandle signalFenceOnFinish) {
 		// Return Imported Textures to initial state
-		GraphicsCommandList revertLayoutsCmdList = m_pDevice->GetGraphicsCmdList();
+		CommandList revertLayoutsCmdList = m_pDevice->GetGraphicsCmdList();
 		revertLayoutsCmdList.Begin();
 
 		for (FGResourceID const fgID : m_DB.GetAllImportedTextures()) {
@@ -632,7 +632,7 @@ namespace CKE {
 
 		//-----------------------------------------------------------------------------
 
-		QueueRecordingState<GraphicsCommandList> gfxState{};
+		QueueRecordingState<CommandList> gfxState{};
 		QueueRecordingState<TransferCommandList> transfState{};
 		QueueRecordingState<ComputeCommandList>  compState{};
 

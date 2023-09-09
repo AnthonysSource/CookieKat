@@ -9,14 +9,13 @@ namespace CKE {
 	public:
 		void Setup(RenderDevice* pDevice) override {
 			BufferDesc bufferDesc{};
-			bufferDesc.m_Name = "Triangle Buffer";
+			bufferDesc.m_DebugName = "Triangle Buffer";
 			bufferDesc.m_MemoryAccess = MemoryAccess::GPU;
 			bufferDesc.m_SizeInBytes = sizeof(CommonShapes::m_TriangleVerts);
 			bufferDesc.m_StrideInBytes = sizeof(TriangleVert);
-			bufferDesc.m_Usage = BufferUsage::Vertex;
-			bufferDesc.m_UpdateFrequency = UpdateFrequency::Static;
-			m_TriangleBuffer = pDevice->CreateBuffer_DEPR(bufferDesc, CommonShapes::m_TriangleVerts.data(),
-			                                              sizeof(CommonShapes::m_TriangleVerts));
+			bufferDesc.m_Usage = BufferUsageFlags::Vertex;
+			bufferDesc.m_DuplicationStrategy = DuplicationStrategy::Unique;
+			m_TriangleBuffer = pDevice->CreateBuffer(bufferDesc);
 
 			PipelineLayoutDesc layoutDesc{};
 			m_PipelineLayout = pDevice->CreatePipelineLayout(layoutDesc);
@@ -41,7 +40,7 @@ namespace CKE {
 		void Render(RenderDevice* pDevice) override {
 			pDevice->AcquireNextBackBuffer();
 
-			GraphicsCommandList cmdList = pDevice->GetGraphicsCmdList();
+			CommandList cmdList = pDevice->GetGraphicsCmdList();
 			cmdList.Begin();
 
 			TextureBarrierDescription barrierDesc{};
@@ -68,7 +67,7 @@ namespace CKE {
 			});
 
 			cmdList.SetDefaultViewportScissor(pDevice->GetBackBufferSize());
-			cmdList.SetPipeline(m_Pipeline);
+			cmdList.SetGraphicsPipeline(m_Pipeline);
 			cmdList.SetVertexBuffer(m_TriangleBuffer);
 			cmdList.Draw(3, 1, 0, 0);
 

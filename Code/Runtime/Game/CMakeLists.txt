@@ -7,5 +7,5 @@ CK_Generic_Module(
 	"CookieKat_Runtime_Game"
 	Game
 	CookieKat/04_Game
-	"include/CookieKat/Game/"
+	"CookieKat/Game/"
 	CookieKat_Engine)

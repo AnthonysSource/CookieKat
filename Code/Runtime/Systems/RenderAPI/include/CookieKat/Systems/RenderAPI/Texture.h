@@ -3,7 +3,9 @@
 #include "CookieKat/Core/Math/Math.h"
 #include "CookieKat/Core/Platform/PrimitiveTypes.h"
 #include "CookieKat/Core/Serialization/Archive.h"
+
 #include "CookieKat/Systems/RenderAPI/RenderHandle.h"
+#include "CookieKat/Systems/RenderAPI/Buffer.h"
 
 namespace CKE {
 	enum class TextureUsage : u32
@@ -95,8 +97,12 @@ namespace CKE {
 		R8G8B8A8_UNORM,
 		R8G8B8A8_USCALED,
 		R8G8B8A8_SSCALED,
-		D24_UNORM_S8_UINT,
+
 		B8G8R8A8_SRGB,
+
+		D24_UNORM_S8_UINT,
+		D32_SFLOAT_S8_UINT,
+
 		R16G16B16A16_SFLOAT,
 		R32G32B32A32_SFLOAT,
 		R32_UINT,
@@ -106,6 +112,14 @@ namespace CKE {
 	{
 		None = 0,
 		Texture_CubeMap = 1 << 0,
+	};
+
+	enum class TextureViewType
+	{
+		Tex1D,
+		Tex2D,
+		Tex3D,
+		Cube,
 	};
 
 	struct SamplerDesc
@@ -124,6 +138,7 @@ namespace CKE {
 		f32           m_MinLod = 0.0f;
 		f32           m_MaxLod = 0.0f;
 
+	public:
 		bool IsEqual(SamplerDesc const& other) const {
 			return
 					m_WrapU == other.m_WrapU &&
@@ -139,6 +154,21 @@ namespace CKE {
 
 	struct TextureDesc
 	{
+		TextureFormat     m_Format = TextureFormat::R8G8B8A8_SRGB;
+		TextureType       m_TextureType = TextureType::Tex2D;
+		TextureAspectMask m_AspectMask = TextureAspectMask::Color;
+		TextureUsage      m_Usage = TextureUsage::Transfer_Dst | TextureUsage::Sampled;
+		UInt3             m_Size = UInt3{1, 1, 1};
+		u32               m_ArraySize = 1;
+		u32               m_MipLevels = 1;
+		u32               m_SampleCount = 1;
+		TextureMiscFlags  m_MiscFlags = TextureMiscFlags::None;
+		bool              m_ConcurrentSharingMode = true;
+		QueueFamilyFlags  m_QueueFamilies = QueueFamilyFlags::All;
+
+		DebugString       m_DebugName{};
+
+	public:
 		template <typename Serializer>
 			requires IsSerializer<Serializer>
 		friend class CKE::Archive;
@@ -150,26 +180,6 @@ namespace CKE {
 		void Serialize(CKE::Archive<Serializer>& archive) {
 			archive.Serialize(m_Size.x, m_Size.y, m_Size.z, m_Format);
 		}
-
-		TextureFormat     m_Format = TextureFormat::R8G8B8A8_SRGB;
-		TextureType       m_TextureType = TextureType::Tex2D;
-		TextureAspectMask m_AspectMask = TextureAspectMask::Color;
-		TextureUsage      m_Usage = TextureUsage::Transfer_Dst | TextureUsage::Sampled;
-		UInt3             m_Size = UInt3{1, 1, 1};
-		u32               m_ArraySize = 1;
-		u32               m_MipLevels = 1;
-		u32               m_SampleCount = 1;
-		TextureMiscFlags  m_MiscFlags = TextureMiscFlags::None;
-		DebugString       m_Name{};
-		bool              m_ConcurrentQueueUsage = true;
-	};
-
-	enum class TextureViewType
-	{
-		Tex1D,
-		Tex2D,
-		Tex3D,
-		Cube,
 	};
 
 	struct TextureViewDesc

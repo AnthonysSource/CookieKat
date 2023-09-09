@@ -1,19 +1,13 @@
 #pragma once
 
 #include "CookieKat/Systems/RenderAPI/Pipeline.h"
+#include "CookieKat/Systems/RenderAPI/CommandQueue.h"
 
 namespace CKE {
-	enum class CommandListType
-	{
-		Graphics,
-		Transfer,
-		Compute
-	};
-
 	struct CommandListDesc
 	{
-		CommandListType m_Type;
-		bool m_IsPrimary; // TODO: This doesn't really work right now, all the cmd lists are primary
+		QueueType m_Type;
+		bool      m_IsPrimary; // TODO: This doesn't really work right now, all the cmd lists are primary
 	};
 
 	struct CmdListWaitSemaphoreInfo
@@ -32,8 +26,7 @@ namespace CKE {
 }
 
 namespace CKE {
-
-	struct TextureRange
+	struct TextureSubresourceRange
 	{
 		TextureAspectMask m_AspectMask = TextureAspectMask::Color;
 		u32               m_BaseMip = 0;
@@ -55,21 +48,58 @@ namespace CKE {
 		TextureHandle     m_Texture;
 		TextureAspectMask m_AspectMask;
 
-		TextureRange m_Range;
+		TextureSubresourceRange m_Range;
 
 		u32 m_SrcQueueFamilyIdx;
 		u32 m_DstQueueFamilyIdx;
 	};
 
+	struct TextureSubresourceLayers
+	{
+		TextureAspectMask m_AspectMask = TextureAspectMask::Color;
+		u32               m_MipLevel = 0;
+		u32               m_ArrayBaseLayer = 0;
+		u32               m_ArrayLayerCount = 1;
+	};
+
+	struct BufferCopyInfo
+	{
+		u64 srcOffset = 0;
+		u64 dstOffset = 0;
+		u64 size = 0;
+
+		BufferCopyInfo() = default;
+	};
+
+	enum class IndicesFormat
+	{
+		UINT16 = 0,
+		UINT32 = 1,
+	};
+
+	enum class PipelineBindPoint
+	{
+		Graphics,
+		Compute,
+		RayTracing
+	};
+
+	struct BufferImageCopyInfo
+	{
+		u64                      bufferOffset;
+		u32                      bufferRowLength;
+		u32                      bufferImageHeight;
+		TextureSubresourceLayers imageSubresource;
+		Int3                     imageOffset;
+		UInt3                    imageExtent;
+	};
+
 	struct TextureCopyInfo
 	{
-		TextureHandle     m_TexHandle;
-		TextureAspectMask m_AspectMask = TextureAspectMask::Color;
-		TextureLayout     m_Layout;
-		u32               m_MipLevel = 0;
-		u32               m_BaseArrayLayer = 0;
-		u32               m_ArrayLayerCount = 1;
-		Int3              m_Offset;
+		TextureHandle            m_TexHandle{};
+		TextureLayout            m_Layout{};
+		TextureSubresourceLayers m_Subresource{};
+		Int3                     m_Offset;
 	};
 
 	struct ImageSubresourceLayers
@@ -88,6 +118,27 @@ namespace CKE {
 		ImageSubresourceLayers m_ImageSubresource;
 		Vec3                   m_ImageOffset;
 		Vec3                   m_ImageExtent;
+	};
+}
+
+namespace CKE {
+
+	struct QueuePriority
+	{
+		QueuePriority(f32 value) : m_Value{ value } {}
+
+		inline static QueuePriority Low() { return QueuePriority{ 0.1f }; }
+		inline static QueuePriority Medium() { return QueuePriority{ 0.5f }; }
+		inline static QueuePriority High() { return QueuePriority{ 0.9f }; }
+		inline static QueuePriority Max() { return QueuePriority{ 1.0f }; }
+
+		f32 m_Value = 0.0f;
+	};
+
+	struct CommandQueueDesc
+	{
+		QueueType m_QueueType = QueueType::Graphics;
+		QueuePriority m_Priority = QueuePriority::Medium();
 	};
 }
 

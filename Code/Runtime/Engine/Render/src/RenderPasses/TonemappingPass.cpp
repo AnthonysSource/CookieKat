@@ -40,7 +40,7 @@ namespace CKE {
 
 	void ToneMappingPass::Setup(FrameGraphSetupContext& setup) {
 		TextureDesc toneMappedTexDesc{};
-		toneMappedTexDesc.m_Name = "Tonemapped Output";
+		toneMappedTexDesc.m_DebugName = "Tonemapped Output";
 		toneMappedTexDesc.m_Format = TextureFormat::R8G8B8A8_SRGB;
 		toneMappedTexDesc.m_AspectMask = TextureAspectMask::Color;
 		toneMappedTexDesc.m_TextureType = TextureType::Tex2D;
@@ -50,7 +50,7 @@ namespace CKE {
 		setup.UseTexture(LightingPass::HDRSceneColor, FGPipelineAccessInfo::FragmentShaderRead());
 	}
 
-	void ToneMappingPass::Execute(ExecuteResourcesCtx& ctx, GraphicsCommandList& cmdList,
+	void ToneMappingPass::Execute(ExecuteResourcesCtx& ctx, CommandList& cmdList,
 	                              RenderDevice&         rd) {
 		TextureViewHandle sceneColor = ctx.GetTextureView(LightingPass::HDRSceneColor);
 		TextureViewHandle tonemapped = ctx.GetTextureView(ToneMappped);
@@ -66,7 +66,7 @@ namespace CKE {
 			.m_UseDepthAttachment = false,
 		});
 
-		cmdList.SetPipeline(m_Pipeline);
+		cmdList.SetGraphicsPipeline(m_Pipeline);
 
 		// Set Pipeline Dynamic State
 		cmdList.SetDefaultViewportScissor(m_pRenderingSettings->m_Viewport.m_Extent);

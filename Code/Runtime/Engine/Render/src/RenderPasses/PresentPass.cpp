@@ -46,7 +46,7 @@ namespace CKE {
 		setup.UseTexture(General::Swapchain, FGPipelineAccessInfo::ColorAttachmentWrite());
 	}
 
-	void PresentPass::Execute(ExecuteResourcesCtx& ctx, GraphicsCommandList& cmdList, RenderDevice& rd) {
+	void PresentPass::Execute(ExecuteResourcesCtx& ctx, CommandList& cmdList, RenderDevice& rd) {
 		TextureViewHandle finalColor = ctx.GetTextureView(FXAAPass::FXAA_Output);
 		TextureViewHandle swapchain = ctx.GetTextureView(General::Swapchain);
 
@@ -61,7 +61,7 @@ namespace CKE {
 			.m_UseDepthAttachment = false,
 		});
 
-		cmdList.SetPipeline(m_Pipeline);
+		cmdList.SetGraphicsPipeline(m_Pipeline);
 
 		// Set Pipeline Dynamic State
 		cmdList.SetDefaultViewportScissor(rd.GetBackBufferSize());

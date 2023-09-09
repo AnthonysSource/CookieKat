@@ -6,7 +6,7 @@ namespace CKE {
 	}
 
 	void PoolAllocator::Initialize(void* pMemoryBlock, u64 chunkSizeInBytes, u64 totalSizeInBytes) {
-		m_pBuffer = (char*)pMemoryBlock;
+		m_pBuffer = (u8*)pMemoryBlock;
 		m_TotalSize = totalSizeInBytes;
 		m_BlockSize = chunkSizeInBytes;
 
@@ -22,7 +22,7 @@ namespace CKE {
 		CKE_ASSERT(!m_BlockOffsetsFree.empty());
 
 		u64   blockOffset = *m_BlockOffsetsFree.begin();
-		char* pBlock = m_pBuffer + blockOffset;
+		u8* pBlock = m_pBuffer + blockOffset;
 
 		m_BlockOffsetsFree.erase(blockOffset);
 		m_BlockOffsetsInUse.insert(blockOffset);
@@ -33,13 +33,13 @@ namespace CKE {
 	void PoolAllocator::Free(void* pChunkPtr) {
 		memset(pChunkPtr, 0, m_BlockSize);
 
-		u64 blockOffset = static_cast<char*>(pChunkPtr) - m_pBuffer;
+		u64 blockOffset = static_cast<u8*>(pChunkPtr) - m_pBuffer;
 		m_BlockOffsetsInUse.erase(blockOffset);
 		m_BlockOffsetsFree.insert(blockOffset);
 	}
 
 	void PoolAllocator::Reset() {
-		for (unsigned long long inUse : m_BlockOffsetsInUse) {
+		for (u64 inUse : m_BlockOffsetsInUse) {
 			m_BlockOffsetsFree.insert(inUse);
 		}
 		m_BlockOffsetsInUse.clear();

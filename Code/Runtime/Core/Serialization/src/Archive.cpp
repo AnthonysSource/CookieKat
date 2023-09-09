@@ -11,7 +11,7 @@ namespace CKE {
 
 	BinaryInputArchive::~BinaryInputArchive() {
 		if (m_pData != nullptr) {
-			CKE::DeleteArray<>(m_pData);
+			Memory::DeleteArray<char>(m_pData);
 		}
 	}
 
@@ -26,7 +26,7 @@ namespace CKE {
 		i64 const fileSize = ifs.tellg();
 
 		// Read raw file from the beginning
-		m_pData = CKE::NewArray<char>(fileSize);
+		m_pData = Memory::NewArray<char>(fileSize);
 		ifs.seekg(0, ifs.beg);
 		ifs.read(m_pData, fileSize);
 

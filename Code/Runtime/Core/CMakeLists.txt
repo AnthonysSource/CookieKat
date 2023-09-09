@@ -30,6 +30,7 @@ PUBLIC
 	CookieKat_Runtime_Core_Profilling
 	CookieKat_Runtime_Core_Logging
 	CookieKat_Runtime_Core_Threading
+	CookieKat_Runtime_Core_Debugging
 	"opengl32.lib"
 	Glad
 	glfw
@@ -38,6 +39,7 @@ PUBLIC
 	enkiTS
 	assimp
 	LodePNG
+	VulkanMemoryAllocator
 )
 
 target_include_directories(${TARGET}
@@ -92,6 +94,7 @@ add_subdirectory("ThirdParty/enkiTS")
 add_subdirectory("ThirdParty/assimp")
 add_subdirectory("ThirdParty/rapidjson")
 add_subdirectory("ThirdParty/lodepng")
+add_subdirectory("ThirdParty/VulkanMemoryAllocator")
 
 add_subdirectory("ThirdParty/googletest")
 
@@ -109,3 +112,4 @@ add_subdirectory("Timer")
 add_subdirectory("Profilling")
 add_subdirectory("Logging")
 add_subdirectory("Threading")
+add_subdirectory("Debugging")

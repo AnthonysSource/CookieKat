@@ -52,12 +52,12 @@ namespace CKE {
 		m_NumComponents = 0;
 		m_ComponentSize = compSizeInBytes;
 		m_ComponentAlignment = compAlignment;
-		m_pData = static_cast<u8*>(CKE::Alloc(compSizeInBytes * numMaxElements, m_ComponentAlignment));
+		m_pData = static_cast<u8*>(Memory::Alloc(compSizeInBytes * numMaxElements, m_ComponentAlignment));
 	}
 
 	inline ComponentArray::~ComponentArray() {
 		if (m_pData != nullptr) {
-			CKE::Free(m_pData);
+			Memory::Free(m_pData);
 		}
 	}
 
