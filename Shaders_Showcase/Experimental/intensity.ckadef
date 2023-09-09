@@ -1,0 +1,5 @@
+{
+	"AssetType":"Pipeline",
+	"VertexShader":"Shaders/Experimental/intensity.vert",
+	"FragmentShader":"Shaders/Experimental/intensity.frag"
+}

@@ -1,0 +1,5 @@
+{
+	"AssetType":"Pipeline",
+	"VertexShader":"Shaders/ssao.vert",
+	"FragmentShader":"Shaders/ssao.frag"
+}

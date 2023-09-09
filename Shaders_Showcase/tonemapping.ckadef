@@ -1,0 +1,5 @@
+{
+	"AssetType":"Pipeline",
+	"VertexShader":"Shaders/tonemapping.vert",
+	"FragmentShader":"Shaders/tonemapping.frag"
+}

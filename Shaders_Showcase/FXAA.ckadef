@@ -1,0 +1,5 @@
+{
+	"AssetType":"Pipeline",
+	"VertexShader":"Shaders/FXAA.vert",
+	"FragmentShader":"Shaders/FXAA.frag"
+}

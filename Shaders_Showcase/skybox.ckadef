@@ -1,0 +1,5 @@
+{
+	"AssetType":"Pipeline",
+	"VertexShader":"Shaders/skybox.vert",
+	"FragmentShader":"Shaders/skybox.frag"
+}

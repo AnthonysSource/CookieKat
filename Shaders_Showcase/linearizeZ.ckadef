@@ -1,0 +1,5 @@
+{
+	"AssetType":"Pipeline",
+	"VertexShader":"Shaders/linearizeZ.vert",
+	"FragmentShader":"Shaders/linearizeZ.frag"
+}

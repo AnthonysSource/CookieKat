@@ -1,0 +1,5 @@
+{
+	"AssetType":"Pipeline",
+	"VertexShader":"Shaders/vignette.vert",
+	"FragmentShader":"Shaders/vignette.frag"
+}

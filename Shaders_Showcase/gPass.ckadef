@@ -1,0 +1,5 @@
+{
+	"AssetType":"Pipeline",
+	"VertexShader":"Shaders/gPass.vert",
+	"FragmentShader":"Shaders/gPass.frag"
+}

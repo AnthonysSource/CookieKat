@@ -1,0 +1,5 @@
+{
+	"AssetType":"Pipeline",
+	"VertexShader":"Shaders/lighting.vert",
+	"FragmentShader":"Shaders/lighting.frag"
+}

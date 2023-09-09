@@ -1,0 +1,5 @@
+{
+	"AssetType":"Pipeline",
+	"VertexShader":"Shaders/Post/bloomCombine.vert",
+	"FragmentShader":"Shaders/Post/bloomCombine.frag"
+}

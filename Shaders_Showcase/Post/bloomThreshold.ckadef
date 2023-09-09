@@ -1,0 +1,5 @@
+{
+	"AssetType":"Pipeline",
+	"VertexShader":"Shaders/Post/bloomThreshold.vert",
+	"FragmentShader":"Shaders/Post/bloomThreshold.frag"
+}
